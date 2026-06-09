@@ -1,16 +1,10 @@
-﻿
-@{
-    ViewBag.Title = "History";
-}
-
-<h2>History</h2>
-@model IEnumerable<HealthAppMVC.Models.HealthRecord>
+﻿@model IEnumerable<HealthAppMVC.Models.HealthRecord>
 
 @{
     ViewBag.Title = "Patient Health History";
 }
 
-<h2>Patient Health History</h2>
+<h2 class="mb-3">🩺 Patient Health History</h2>
 
 @if (TempData["Success"] != null)
 {
@@ -19,57 +13,84 @@
     </div>
 }
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Visit Date</th>
-            <th>Doctor</th>
-            <th>Specialisation</th>
-            <th>Diagnosis</th>
-            <th>Prescription</th>
-            <th></th>
-        </tr>
-    </thead>
+<!-- SEARCH BOX -->
+@using (Html.BeginForm("History", "HealthRecord", FormMethod.Get))
+{
+    <div class="row mb-4">
 
-    <tbody>
-        @foreach (var item in Model)
+        <div class="col-md-6">
+            <input type="text"
+                   name="patientName"
+                   class="form-control"
+                   placeholder="Search Patient Name" />
+
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-primary">
+                Search
+            </button>
+        </div>
+
+    </div>
+}
+
+<!-- CARDS VIEW -->
+<div class="row">
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @item.VisitDate
-                </td>
+            <div class="col-md-4 mb-3">
 
-                <td>
-                    @item.DoctorName
-                </td>
+                <div class="card shadow-sm h-100 border-0">
 
-                <td>
-                    @item.Specialisation
-                </td>
+                    <div class="card-body">
 
-                <td>
-                    @item.Diagnosis
-                </td>
+                        <h5 class="card-title">
+                            👨‍⚕️ @item.DoctorName
+                        </h5>
 
-                <td>
-                    @item.Prescription
-                </td>
+                        <p>
+                            <strong>Specialisation:</strong>
+                            @item.Specialisation
+                        </p>
 
-                <td>
-                    @Html.ActionLink(
-                        "View",
-                        "Details",
-                        new
-                        {
-                            id = item.HealthRecordId
-                        },
-                        new
-                        {
-                            @class =
-                            "btn btn-primary btn-sm"
-                        })
-                </td>
-            </tr>
+                        <p>
+                            <strong>Visit Date:</strong>
+                            @item.VisitDate.ToString("dd-MMM-yyyy")
+                        </p>
+
+                        <p>
+                            <strong>Diagnosis:</strong>
+                            @item.Diagnosis
+                        </p>
+
+                        <p>
+                            <strong>Prescription:</strong>
+                            @item.Prescription
+                        </p>
+
+                        <a href="@Url.Action("Details", "HealthRecord", new { id = item.HealthRecordId })"
+                           class="btn btn-sm btn-outline-primary">
+                            View Details
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
         }
-    </tbody>
-</table>
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="alert alert-info">
+                No health records found for this patient.
+            </div>
+        </div>
+    }
+
+</div>

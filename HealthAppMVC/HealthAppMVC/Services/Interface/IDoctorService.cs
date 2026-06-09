@@ -19,5 +19,7 @@ namespace HealthAppMVC.Services.Interface
 
         IEnumerable<Doctor> SearchBySpecialisation(
             SpecialisationType specialisation);
+
+        IEnumerable<Doctor> SearchByName(string name);
     }
 }

@@ -56,18 +56,17 @@ $(function () {
         }
     });
 
-    $("#btnHistory")
-        .click(function () {
+    $("#btnHistory").click(function () {
 
-        var id =
-            $("#patientId").val();
+        var id = $("#patientId").val();
 
-        if (id)
-        {
-            window.location =
-            '/HealthRecord/OpenHistory?id='
-            + id;
+        if (!id || id === "0") {
+            alert("Please select a patient from suggestions");
+            return;
         }
+
+        window.location =
+            '/HealthRecord/History?patientId=' + id;
     });
 });
 

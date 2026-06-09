@@ -32,5 +32,14 @@ namespace HealthAppMVC.Services.Interface
         IEnumerable<Appointment>
             GetAppointmentsByDoctor(
             int doctorId);
+
+        IEnumerable<Appointment>
+        GetUpcomingAppointments();
+
+        IEnumerable<Appointment>
+       GetUpcomingAppointmentsByDoctor(
+       string doctorName);
+
+
     }
 }

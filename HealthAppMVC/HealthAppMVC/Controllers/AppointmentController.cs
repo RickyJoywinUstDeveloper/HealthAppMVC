@@ -84,23 +84,15 @@ namespace HealthAppMVC.Controllers
         [HttpGet]
         public ActionResult Confirm(int id)
         {
-            try
-            {
+           
                 _appointmentService
                     .ConfirmAppointment(id);
 
                 TempData["Success"] =
                     "Appointment confirmed.";
 
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] =
-                    ex.Message;
-
-                return RedirectToAction("Index");
-            }
+                return RedirectToAction("UpcomingAppointments");
+            
         }
 
         [HttpGet]
@@ -129,7 +121,7 @@ namespace HealthAppMVC.Controllers
                 TempData["Success"] =
                     "Appointment cancelled.";
 
-                return RedirectToAction("Index");
+                return RedirectToAction("UpcomingAppointments");
             }
             catch (Exception ex)
             {
@@ -158,5 +150,46 @@ namespace HealthAppMVC.Controllers
                     "DoctorId",
                     "FullName");
         }
+
+        public ActionResult UpcomingAppointments(
+    string doctorName = "")
+        {
+            IEnumerable<Appointment> app;
+
+
+            var appointments = _appointmentService.GetUpcomingAppointments();
+
+            if (!string.IsNullOrWhiteSpace(doctorName))
+            {
+                appointments = appointments
+                    .Where(a => a.DoctorName
+                    .ToLower()
+                    .Contains(doctorName.ToLower()));
+            }
+
+            ViewBag.DoctorName = doctorName; // 🔥 IMPORTANT
+
+            return View(appointments);
+        }
+
+        public JsonResult SearchDoctorNames(
+    string term)
+        {
+            var doctors =
+                _doctorService
+                .SearchByName(term)
+                .Select(d => new
+                {
+                    label = d.FullName,
+                    value = d.FullName
+                })
+                .ToList();
+
+            return Json(
+                doctors,
+                JsonRequestBehavior.AllowGet);
+        }
+
+
     }
 }

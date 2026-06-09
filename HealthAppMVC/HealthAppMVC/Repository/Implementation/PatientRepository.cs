@@ -303,5 +303,49 @@ namespace HealthAppMVC.Repository.Implementation
                 return (int)cmd.ExecuteScalar();
             }
         }
+
+        public List<Patient> SearchByName(string name)
+        {
+            List<Patient> patients =
+                new List<Patient>();
+
+            using (SqlConnection con =
+                   new SqlConnection(_connectionString))
+            {
+                string query = @"
+        SELECT *
+        FROM Patients
+        WHERE FullName LIKE '%' + @Name + '%'
+        ORDER BY FullName";
+
+                SqlCommand cmd =
+                    new SqlCommand(query, con);
+
+                cmd.Parameters.AddWithValue(
+                    "@Name",
+                    name);
+
+                con.Open();
+
+                SqlDataReader reader =
+                    cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    patients.Add(new Patient
+                    {
+                        PatientId =
+                            Convert.ToInt32(
+                            reader["PatientId"]),
+
+                        FullName =
+                            reader["FullName"]
+                            .ToString()
+                    });
+                }
+            }
+
+            return patients;
+        }
     }
 }

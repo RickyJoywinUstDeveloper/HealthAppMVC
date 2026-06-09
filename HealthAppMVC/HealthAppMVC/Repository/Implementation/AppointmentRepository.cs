@@ -226,7 +226,7 @@ namespace HealthAppMVC.Repository.Implementation
             }
         }
 
-       
+
 
         public bool IsSlotAvailable(
             int doctorId,
@@ -581,6 +581,88 @@ namespace HealthAppMVC.Repository.Implementation
 
                 return count > 0;
             }
+        }
+
+        public List<Appointment> GetUpcomingAppointments()
+        {
+            List<Appointment> appointments =
+                new List<Appointment>();
+
+            using (SqlConnection con =
+                new SqlConnection(_connectionString))
+            {
+                string query = @"
+        SELECT A.*,
+               D.FullName AS DoctorName,
+               P.FullName AS PatientName
+        FROM Appointments A
+        INNER JOIN Doctors D
+            ON A.DoctorId = D.DoctorId
+        INNER JOIN Patients P
+            ON A.PatientId = P.PatientId
+        WHERE ScheduledDate >= CAST(GETDATE() AS DATE)
+        AND A.Status IN (0, 1)
+        ORDER BY ScheduledDate";
+
+                SqlCommand cmd =
+                    new SqlCommand(query, con);
+
+                con.Open();
+
+                SqlDataReader reader =
+                    cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    appointments.Add(MapAppointment(reader));
+                }
+            }
+
+            return appointments;
+        }
+
+        public List<Appointment>
+GetUpcomingAppointmentsByDoctor(
+    string doctorName)
+        {
+            List<Appointment> appointments =
+                new List<Appointment>();
+
+            using (SqlConnection con =
+                new SqlConnection(_connectionString))
+            {
+                string query = @"
+        SELECT A.*,
+               D.FullName AS DoctorName,
+               P.FullName AS PatientName
+        FROM Appointments A
+        INNER JOIN Doctors D
+            ON A.DoctorId = D.DoctorId
+        INNER JOIN Patients P
+            ON A.PatientId = P.PatientId
+        WHERE D.FullName LIKE '%' + @Name + '%'
+        AND ScheduledDate >= CAST(GETDATE() AS DATE)
+        ORDER BY ScheduledDate";
+
+                SqlCommand cmd =
+                    new SqlCommand(query, con);
+
+                cmd.Parameters.AddWithValue(
+                    "@Name",
+                    doctorName);
+
+                con.Open();
+
+                SqlDataReader reader =
+                    cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    appointments.Add(MapAppointment(reader));
+                }
+            }
+
+            return appointments;
         }
 
     }

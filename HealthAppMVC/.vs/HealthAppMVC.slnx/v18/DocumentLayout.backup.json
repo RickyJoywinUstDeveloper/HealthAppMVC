@@ -1,12 +1,171 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\healthappmvc\\views\\doctor\\doctorsearch.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\views\\doctor\\doctorsearch.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|c:\\users\\310189\\source\\repos\\sprint 2\\healthappmvc\\healthappmvc\\services\\implementation\\appointmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\services\\implementation\\appointmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|c:\\users\\310189\\source\\repos\\sprint 2\\healthappmvc\\healthappmvc\\views\\doctor\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\views\\doctor\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|c:\\users\\310189\\source\\repos\\sprint 2\\healthappmvc\\healthappmvc\\repository\\interface\\iappointmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\repository\\interface\\iappointmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\healthappmvc\\repository\\implementation\\appointmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\repository\\implementation\\appointmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\healthappmvc\\views\\doctor\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\views\\doctor\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|c:\\users\\310189\\source\\repos\\sprint 2\\healthappmvc\\healthappmvc\\controllers\\doctorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\controllers\\doctorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\healthappmvc\\views\\appointment\\upcomingappointments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\views\\appointment\\upcomingappointments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\healthappmvc\\views\\home\\doctorservices.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\views\\home\\doctorservices.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AppointmentService.cs",
+              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Services\\Implementation\\AppointmentService.cs",
+              "RelativeDocumentMoniker": "HealthAppMVC\\Services\\Implementation\\AppointmentService.cs",
+              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Services\\Implementation\\AppointmentService.cs",
+              "RelativeToolTip": "HealthAppMVC\\Services\\Implementation\\AppointmentService.cs",
+              "ViewState": "AgIAAKwAAAAAAAAAAAAwwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-09T05:14:16.578Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Doctor\\Edit.cshtml",
+              "RelativeDocumentMoniker": "HealthAppMVC\\Views\\Doctor\\Edit.cshtml",
+              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Doctor\\Edit.cshtml",
+              "RelativeToolTip": "HealthAppMVC\\Views\\Doctor\\Edit.cshtml",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAFsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T04:00:22.447Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Doctor\\Create.cshtml",
+              "RelativeDocumentMoniker": "HealthAppMVC\\Views\\Doctor\\Create.cshtml",
+              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Doctor\\Create.cshtml",
+              "RelativeToolTip": "HealthAppMVC\\Views\\Doctor\\Create.cshtml",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAAF8AAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T03:34:58.762Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "UpcomingAppointments.cshtml",
+              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Appointment\\UpcomingAppointments.cshtml",
+              "RelativeDocumentMoniker": "HealthAppMVC\\Views\\Appointment\\UpcomingAppointments.cshtml",
+              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Appointment\\UpcomingAppointments.cshtml",
+              "RelativeToolTip": "HealthAppMVC\\Views\\Appointment\\UpcomingAppointments.cshtml",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAmwGAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002242|",
+              "WhenOpened": "2026-06-09T03:52:44.775Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DoctorSearch.cshtml",
+              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Doctor\\DoctorSearch.cshtml",
+              "RelativeDocumentMoniker": "HealthAppMVC\\Views\\Doctor\\DoctorSearch.cshtml",
+              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Doctor\\DoctorSearch.cshtml",
+              "RelativeToolTip": "HealthAppMVC\\Views\\Doctor\\DoctorSearch.cshtml",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAACwAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T03:52:44.776Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IAppointmentRepository.cs",
+              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Repository\\Interface\\IAppointmentRepository.cs",
+              "RelativeDocumentMoniker": "HealthAppMVC\\Repository\\Interface\\IAppointmentRepository.cs",
+              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Repository\\Interface\\IAppointmentRepository.cs",
+              "RelativeToolTip": "HealthAppMVC\\Repository\\Interface\\IAppointmentRepository.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-09T05:16:53.581Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AppointmentRepository.cs",
+              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Repository\\Implementation\\AppointmentRepository.cs",
+              "RelativeDocumentMoniker": "HealthAppMVC\\Repository\\Implementation\\AppointmentRepository.cs",
+              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Repository\\Implementation\\AppointmentRepository.cs",
+              "RelativeToolTip": "HealthAppMVC\\Repository\\Implementation\\AppointmentRepository.cs",
+              "ViewState": "AgIAAGUCAAAAAAAAAAAAwIICAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-09T03:34:58.907Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "DoctorController.cs",
+              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Controllers\\DoctorController.cs",
+              "RelativeDocumentMoniker": "HealthAppMVC\\Controllers\\DoctorController.cs",
+              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Controllers\\DoctorController.cs",
+              "RelativeToolTip": "HealthAppMVC\\Controllers\\DoctorController.cs",
+              "ViewState": "AgIAAGsAAAAAAAAAAAAswHkAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-09T03:34:58.751Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "DoctorServices.cshtml",
+              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Home\\DoctorServices.cshtml",
+              "RelativeDocumentMoniker": "HealthAppMVC\\Views\\Home\\DoctorServices.cshtml",
+              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Home\\DoctorServices.cshtml",
+              "RelativeToolTip": "HealthAppMVC\\Views\\Home\\DoctorServices.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIAAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002242|",
+              "WhenOpened": "2026-06-09T03:52:44.779Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

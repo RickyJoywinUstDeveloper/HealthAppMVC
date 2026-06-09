@@ -159,7 +159,7 @@ namespace HealthAppMVC.Services.Implementation
                     reason);
         }
 
-       
+
 
         public IEnumerable<Appointment>
             GetAppointmentsByPatient(
@@ -177,6 +177,24 @@ namespace HealthAppMVC.Services.Implementation
             return _appointmentRepository
                 .GetAppointmentsByDoctor(
                     doctorId);
+        }
+
+
+        public IEnumerable<Appointment>
+GetUpcomingAppointments()
+        {
+            return _appointmentRepository
+                .GetUpcomingAppointments();
+        }
+
+
+        public IEnumerable<Appointment>
+GetUpcomingAppointmentsByDoctor(
+    string doctorName)
+        {
+            return _appointmentRepository
+                .GetUpcomingAppointmentsByDoctor(
+                    doctorName);
         }
     }
 }

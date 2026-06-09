@@ -214,6 +214,9 @@
     <Reference Include="Unity.Mvc, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.Mvc.5.11.1\lib\net47\Unity.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Mvc5, Version=1.4.0.0, Culture=neutral, PublicKeyToken=43da31bc42a85347, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Mvc5.1.4.0\lib\net45\Unity.Mvc5.dll</HintPath>
+    </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
@@ -240,7 +243,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
-    <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Constants\TimeSlots.cs" />
     <Compile Include="Controllers\AppointmentController.cs" />
     <Compile Include="Controllers\DoctorController.cs" />
@@ -365,6 +367,11 @@
     <Content Include="Views\HealthRecord\Create.cshtml" />
     <Content Include="Views\HealthRecord\History.cshtml" />
     <Content Include="Views\HealthRecord\Details.cshtml" />
+    <Content Include="Views\Home\DoctorServices.cshtml" />
+    <Content Include="Views\Doctor\SearchDoctor.cshtml" />
+    <Content Include="Views\Doctor\DoctorSearch.cshtml" />
+    <Content Include="Views\HealthRecord\SearchPatientHistory.cshtml" />
+    <Content Include="Views\Appointment\UpcomingAppointments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

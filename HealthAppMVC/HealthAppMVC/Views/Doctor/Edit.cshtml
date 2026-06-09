@@ -1,7 +1,7 @@
 ﻿@model HealthAppMVC.Models.Doctor
 
 @{
-    ViewBag.Title = "Add Doctor";
+    ViewBag.Title = "Edit Doctor";
 }
 
 <h2>Edit Doctor</h2>
@@ -92,7 +92,8 @@
 
     @Html.ActionLink(
         "Back",
-        "Index",
+  "DoctorServices",
+    "Home",
         null,
         new { @class = "btn btn-secondary" })
 

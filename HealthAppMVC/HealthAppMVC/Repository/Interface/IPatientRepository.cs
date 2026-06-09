@@ -22,5 +22,7 @@ namespace HealthAppMVC.Repository.Interface
         bool EmailExists(string email);
 
         int GetAppointmentCount(int patientId);
+
+        List<Patient> SearchByName(string name);
     }
 }

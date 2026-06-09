@@ -83,5 +83,10 @@ namespace HealthAppMVC.Services.Implementation
             return _patientRepository
                 .GetAppointmentCount(patientId);
         }
+
+        public IEnumerable<Patient> SearchByName(string name)
+        {
+            return _patientRepository.SearchByName(name);
+        }
     }
 }

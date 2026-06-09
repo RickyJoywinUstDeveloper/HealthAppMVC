@@ -17,8 +17,11 @@ namespace HealthAppMVC.Services.Interface
 
         void UpdatePatient(Patient patient);
 
-    
+        IEnumerable<Patient> SearchByName(string name);
 
         int GetAppointmentCount(int patientId);
+
+       
     }
-}
+    
+    }

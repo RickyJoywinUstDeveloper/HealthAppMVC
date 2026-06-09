@@ -53,5 +53,9 @@ namespace HealthAppMVC.Repository.Interface
 
         bool HealthRecordExists(
             int appointmentId);
+
+        List<Appointment> GetUpcomingAppointments();
+        List<Appointment> GetUpcomingAppointmentsByDoctor(string doctorName);
     }
 }
+    

@@ -366,5 +366,54 @@ namespace HealthAppMVC.Repository.Implementation
 
             return doctors;
         }
+
+        public List<Doctor> SearchByName(string name)
+        {
+            List<Doctor> doctors = new List<Doctor>();
+
+            using (SqlConnection con =
+                   new SqlConnection(_connectionString))
+            {
+                string query = @"
+        SELECT *
+        FROM Doctors
+        WHERE FullName LIKE '%' + @Name + '%'
+        ORDER BY FullName";
+
+                SqlCommand cmd =
+                    new SqlCommand(query, con);
+
+                cmd.Parameters.AddWithValue("@Name", name);
+
+                con.Open();
+
+                SqlDataReader reader =
+                    cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    doctors.Add(new Doctor
+                    {
+                        DoctorId = Convert.ToInt32(reader["DoctorId"]),
+                        FullName = reader["FullName"].ToString(),
+                        Specialisation =
+                            (SpecialisationType)
+                            Convert.ToInt32(reader["Specialisation"]),
+                        DoctorPhoneNo =
+                            reader["DoctorPhoneNo"].ToString(),
+                        DoctorEmail =
+                            reader["DoctorEmail"].ToString(),
+                        YearsOfExperience =
+                            Convert.ToInt32(reader["YearsOfExperience"]),
+                        ConsultationFee =
+                            Convert.ToDecimal(reader["ConsultationFee"]),
+                        IsActive =
+                            Convert.ToBoolean(reader["IsActive"])
+                    });
+                }
+            }
+
+            return doctors;
+        }
     }
 }

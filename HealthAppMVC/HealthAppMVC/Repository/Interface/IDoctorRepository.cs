@@ -22,5 +22,7 @@ namespace HealthAppMVC.Repository.Interface
 
         List<Doctor> SearchBySpecialisation(
             SpecialisationType specialisation);
+
+        List<Doctor> SearchByName(string name);
     }
 }

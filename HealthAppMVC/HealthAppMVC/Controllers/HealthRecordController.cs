@@ -1,7 +1,7 @@
 ﻿using HealthAppMVC.Models;
 using HealthAppMVC.Services.Interface;
 using System;
-
+using System.Linq;
 using System.Web.Mvc;
 
 namespace HealthAppMVC.Controllers
@@ -11,13 +11,17 @@ namespace HealthAppMVC.Controllers
     {
         private readonly IHealthRecordService
             _healthRecordService;
+        private readonly IPatientService _patientService;
 
         public HealthRecordController(
-            IHealthRecordService
-                healthRecordService)
+    IHealthRecordService healthRecordService,
+    IPatientService patientService)
         {
             _healthRecordService =
                 healthRecordService;
+
+            _patientService =
+                patientService;
         }
 
         // GET:
@@ -47,9 +51,9 @@ namespace HealthAppMVC.Controllers
                     return View(record);
                 }
 
-               record =  _healthRecordService
-                    .AddHealthRecord(
-                        record);
+                record = _healthRecordService
+                     .AddHealthRecord(
+                         record);
 
                 TempData["Success"] =
                     "Health Record Added Successfully";
@@ -73,16 +77,10 @@ namespace HealthAppMVC.Controllers
         }
 
         // HealthRecord/History/1
-        public ActionResult History(
-            int patientId)
+        public ActionResult History(int patientId)
         {
             var records =
-                _healthRecordService
-                .GetPatientHistory(
-                    patientId);
-
-            ViewBag.PatientId =
-                patientId;
+                _healthRecordService.GetPatientHistory(patientId);
 
             return View(records);
         }
@@ -102,5 +100,30 @@ namespace HealthAppMVC.Controllers
 
             return View(record);
         }
+
+        public ActionResult SearchPatientHistory()
+        {
+            return View();
+        }
+
+        public JsonResult SearchPatientNames(
+    string term)
+        {
+            var patients =
+                _patientService
+                .SearchByName(term)
+                .Select(p => new
+                {
+                    label = p.FullName,
+                    value = p.PatientId
+                })
+                .ToList();
+
+            return Json(
+                patients,
+                JsonRequestBehavior.AllowGet);
+        }
+
+        
     }
 }

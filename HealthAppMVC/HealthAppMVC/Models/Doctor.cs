@@ -20,7 +20,10 @@ namespace HealthAppMVC.Models
         public int DoctorId { get; set; }
 
         [Required(ErrorMessage = "Doctor name is required")]
-        [StringLength(100)]
+        [StringLength(100, MinimumLength = 3,
+    ErrorMessage = "Name must be between 3 and 100 characters")]
+        [RegularExpression(@"^[A-Za-z ]+$",
+    ErrorMessage = "Only alphabets and spaces are allowed")]
         public string FullName { get; set; }
 
         [Required(ErrorMessage = "Specialisation is required")]
@@ -47,7 +50,7 @@ namespace HealthAppMVC.Models
 
         [Required(ErrorMessage = "Consultation fee is required")]
         [Range(
-            1,
+            150,
             100000,
             ErrorMessage = "Consultation fee must be greater than 0")]
         public decimal ConsultationFee { get; set; }

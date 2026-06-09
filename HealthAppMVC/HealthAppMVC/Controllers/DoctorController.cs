@@ -1,6 +1,7 @@
 ﻿using HealthAppMVC.Models;
 using HealthAppMVC.Services.Interface;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -88,11 +89,8 @@ namespace HealthAppMVC.Controllers
                 _doctorService
                     .AddDoctor(doctor);
 
-                TempData["Success"] =
-                    "Doctor added successfully.";
-
-                return RedirectToAction(
-                    "Index");
+                TempData["Success"] = "Doctor Registered Successfully";
+                return RedirectToAction("DoctorServices", "Home");
             }
             catch (Exception ex)
             {
@@ -121,7 +119,7 @@ namespace HealthAppMVC.Controllers
                     ex.Message;
 
                 return RedirectToAction(
-                    "Index");
+                    "DoctorServices", "Home");
             }
         }
 
@@ -140,12 +138,8 @@ namespace HealthAppMVC.Controllers
             {
                 _doctorService
                     .UpdateDoctor(doctor);
-
-                TempData["Success"] =
-                    "Doctor updated successfully.";
-
-                return RedirectToAction(
-                    "Index");
+                TempData["Success"] = "Doctor Details Updated Successfully";
+                return RedirectToAction("DoctorServices", "Home");
             }
             catch (Exception ex)
             {
@@ -189,6 +183,63 @@ namespace HealthAppMVC.Controllers
                 return RedirectToAction(
                     "Index");
             }
+        }
+
+        public ActionResult SearchDoctor()
+        {
+            return View();
+        }
+
+        public JsonResult SearchDoctorNames(string term)
+        {
+            var doctors = _doctorService
+                            .SearchByName(term)
+                            .Select(d => new
+                            {
+                                label = d.FullName,
+                                value = d.DoctorId
+                            })
+                            .ToList();
+
+            return Json(doctors,
+                JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult EditDoctorByName(int id)
+        {
+            return RedirectToAction("Edit",
+                new { id = id });
+        }
+
+        public ActionResult DoctorSearch(
+    string doctorName,
+    string specialisation)
+        {
+            IEnumerable<Doctor> doctors =
+                _doctorService.GetAllDoctors();
+
+            if (!string.IsNullOrWhiteSpace(doctorName))
+            {
+                doctors = doctors.Where(d =>
+                    d.FullName.ToLower()
+                     .Contains(doctorName.ToLower()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(specialisation))
+            {
+                SpecialisationType sp;
+
+                if (Enum.TryParse(
+                        specialisation,
+                        true,
+                        out sp))
+                {
+                    doctors = doctors.Where(
+                        d => d.Specialisation == sp);
+                }
+            }
+
+            return View(doctors);
         }
     }
 }

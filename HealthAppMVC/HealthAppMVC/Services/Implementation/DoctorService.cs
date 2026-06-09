@@ -107,5 +107,10 @@ namespace HealthAppMVC.Services.Implementation
                 .SearchBySpecialisation(
                     specialisation);
         }
+
+        public IEnumerable<Doctor> SearchByName(string name)
+        {
+            return _doctorRepository.SearchByName(name);
+        }
     }
 }
