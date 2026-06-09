@@ -1,0 +1,172 @@
+﻿@model IEnumerable<HealthAppMVC.Models.Patient>
+
+@{
+    ViewBag.Title = "View Patient Details";
+}
+
+<div class="card shadow">
+
+    <div class="card-header bg-info text-white">
+        <h3>🔍 View Patient Details</h3>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row mb-3">
+
+            <div class="col-md-8">
+
+                <input type="text"
+                       id="patientSearch"
+                       class="form-control"
+                       placeholder="Search patient by name..." />
+
+            </div>
+
+            <div class="col-md-4">
+
+                <a href="@Url.Action("PatientServices","Home")"
+                   class="btn btn-secondary">
+                    Back
+                </a>
+
+            </div>
+
+        </div>
+
+        <hr />
+
+        @if (Model != null && Model.Any())
+        {
+            foreach (var patient in Model)
+            {
+                <div class="patient-card-wrapper">
+
+                    <div class="card mb-3 border-start border-4 border-info">
+
+                        <div class="card-body">
+
+                            <h5 class="patient-name">
+                                👤 @patient.FullName
+                            </h5>
+
+                            <p>
+                                <strong>Patient ID:</strong>
+                                @patient.PatientId
+                            </p>
+
+                            <p>
+                                <strong>Date Of Birth:</strong>
+                                @patient.DateOfBirth.ToString("dd-MMM-yyyy")
+                            </p>
+
+                            <p>
+                                <strong>Gender:</strong>
+                                @patient.Gender
+                            </p>
+
+                            <p>
+                                <strong>Phone:</strong>
+                                @patient.PhoneNumber
+                            </p>
+
+                            <p>
+                                <strong>Email:</strong>
+                                @patient.Email
+                            </p>
+
+                            <p>
+                                <strong>Insurance ID:</strong>
+                                @patient.InsuranceId
+                            </p>
+
+                            <p>
+                                <strong>Created:</strong>
+                                @patient.CreatedDate.ToString("dd-MMM-yyyy")
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+            <div id="noResults"
+                 class="alert alert-warning"
+                 style="display:none;">
+                No patients found.
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                No patients found.
+            </div>
+        }
+
+    </div>
+
+</div>
+
+@section Scripts{
+
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <script>
+
+    $(function () {
+
+        $("#patientSearch").autocomplete({
+
+            source: '@Url.Action("SearchPatientNames","Patient")'
+
+        });
+
+        $("#patientSearch").on("input", function () {
+
+            var searchText =
+                $(this).val().toLowerCase();
+
+            var visibleCount = 0;
+
+            $(".patient-card-wrapper").each(function () {
+
+                var patientName =
+                    $(this)
+                    .find(".patient-name")
+                    .text()
+                    .toLowerCase();
+
+                if (patientName.indexOf(searchText) > -1) {
+
+                    $(this).show();
+                    visibleCount++;
+
+                }
+                else {
+
+                    $(this).hide();
+
+                }
+
+            });
+
+            if (visibleCount === 0) {
+
+                $("#noResults").show();
+
+            }
+            else {
+
+                $("#noResults").hide();
+
+            }
+
+        });
+
+    });
+
+    </script>
+
+}

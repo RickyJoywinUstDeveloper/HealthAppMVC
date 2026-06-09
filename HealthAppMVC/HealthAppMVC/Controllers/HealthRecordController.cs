@@ -1,6 +1,7 @@
 ﻿using HealthAppMVC.Models;
 using HealthAppMVC.Services.Interface;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -76,14 +77,7 @@ namespace HealthAppMVC.Controllers
             }
         }
 
-        // HealthRecord/History/1
-        public ActionResult History(int patientId)
-        {
-            var records =
-                _healthRecordService.GetPatientHistory(patientId);
-
-            return View(records);
-        }
+        
 
         // HealthRecord/Details/1
         public ActionResult Details(
@@ -101,9 +95,18 @@ namespace HealthAppMVC.Controllers
             return View(record);
         }
 
-        public ActionResult SearchPatientHistory()
+        public ActionResult SearchPatientHistory(int? patientId)
         {
-            return View();
+            IEnumerable<HealthRecord> records =
+                Enumerable.Empty<HealthRecord>();
+
+            if (patientId.HasValue)
+            {
+                records = _healthRecordService
+                    .GetPatientHistory(patientId.Value);
+            }
+
+            return View(records);
         }
 
         public JsonResult SearchPatientNames(

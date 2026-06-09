@@ -1,0 +1,165 @@
+﻿<style>
+    .patient-card {
+        border: none;
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+        transition: transform 0.2s ease;
+    }
+
+        .patient-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .patient-card .card-header {
+            background-color: #000;
+            color: #fff;
+            border-bottom: none;
+        }
+</style>
+
+
+@model IEnumerable<HealthAppMVC.Models.Patient>
+
+@{
+    ViewBag.Title = "Edit Patient";
+}
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-warning">
+            <h3>✏️ Edit Patient Details</h3>
+        </div>
+
+        <div class="card-body">
+
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Search Patient
+                </label>
+
+                <input type="text"
+                       id="patientSearch"
+                       class="form-control"
+                       placeholder="Type patient name..." />
+
+            </div>
+
+            <div class="row" id="patientContainer">
+
+                @foreach (var patient in Model)
+                {
+                    <div class="col-md-6 mb-3 patient-card">
+
+                       <div class="card patient-card shadow">
+
+                           <div class="card-body">
+
+                               <h5 class="patient-name">
+                                   👤 @patient.FullName
+                               </h5>
+
+                               <p>
+                                   <strong>ID:</strong>
+                                   @patient.PatientId
+                               </p>
+
+                               <p>
+                                   <strong>Phone:</strong>
+                                   @patient.PhoneNumber
+                               </p>
+
+                               <p>
+                                   <strong>Email:</strong>
+                                   @patient.Email
+                               </p>
+
+                               <p>
+                                   <strong>Gender:</strong>
+                                   @patient.Gender
+                               </p>
+
+                               <a href="@Url.Action(
+                                            "Edit",
+                                            "Patient",
+                                            new { id = patient.PatientId })"
+                                  class="btn btn-primary">
+                                   Edit Patient
+                               </a>
+
+                           </div>
+
+                       </div>
+
+                    </div>
+                }
+
+            </div>
+
+            <div id="noResults"
+                 class="alert alert-info mt-3"
+                 style="display:none;">
+                No patients found.
+            </div>
+
+            <a href="@Url.Action("PatientServices","Home")"
+               class="btn btn-secondary mt-3">
+                Back
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts{
+
+<script>
+
+$(function () {
+
+    $("#patientSearch").on("keyup", function () {
+
+        var searchText =
+            $(this).val().toLowerCase();
+
+        var visibleCount = 0;
+
+        $(".patient-card").each(function () {
+
+            var patientName =
+                $(this)
+                .find(".patient-name")
+                .text()
+                .toLowerCase();
+
+            if (patientName.indexOf(searchText) > -1)
+            {
+                $(this).show();
+                visibleCount++;
+            }
+            else
+            {
+                $(this).hide();
+            }
+
+        });
+
+        if (visibleCount === 0)
+        {
+            $("#noResults").show();
+        }
+        else
+        {
+            $("#noResults").hide();
+        }
+
+    });
+
+});
+
+</script>
+
+}

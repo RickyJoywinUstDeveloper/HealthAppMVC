@@ -40,6 +40,15 @@ namespace HealthAppMVC.Services.Interface
        GetUpcomingAppointmentsByDoctor(
        string doctorName);
 
+        IEnumerable<string> GetAvailableSlots(
+    int doctorId,
+    DateTime scheduledDate);
+
+        IEnumerable<Appointment>
+            GetAppointmentsByPatientName(
+                string patientName);
+
+        bool HealthRecordExists(int appointmentId);
 
     }
 }

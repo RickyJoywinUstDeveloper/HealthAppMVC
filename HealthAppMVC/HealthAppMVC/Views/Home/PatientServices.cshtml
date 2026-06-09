@@ -1,0 +1,196 @@
+﻿@{
+    ViewBag.Title = "Patient Services";
+}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">
+            🧑 Patient Services
+        </h2>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["Success"]
+            </div>
+        }
+
+        <p class="text-muted">
+            Manage patients, appointments and health records
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Add Patient -->
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+
+                <div class="card-body text-center">
+
+                    <h1>➕🧑</h1>
+
+                    <h5>Add Patient</h5>
+
+                    <p class="text-muted">
+                        Register a new patient.
+                    </p>
+
+                    <a href="@Url.Action("Create","Patient")"
+                       class="btn btn-primary">
+                        Open
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Patient -->
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+
+                <div class="card-body text-center">
+
+                    <h1>✏️🧑</h1>
+
+                    <h5>Edit Patient Details</h5>
+
+                    <p class="text-muted">
+                        Search and update patient information.
+                    </p>
+
+                    <a href="@Url.Action("SearchPatient","Patient")"
+                       class="btn btn-warning">
+                        Open
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- View Patient -->
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+
+                <div class="card-body text-center">
+
+                    <h1>🔍🧑</h1>
+
+                    <h5>View Patient Details</h5>
+
+                    <p class="text-muted">
+                        Search and view patient records.
+                    </p>
+
+                    <a href="@Url.Action("PatientSearch","Patient")"
+                       class="btn btn-info">
+                        Open
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Book Appointment -->
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+
+                <div class="card-body text-center">
+
+                    <h1>📅</h1>
+
+                    <h5>Book Appointment</h5>
+
+                    <p class="text-muted">
+                        Schedule an appointment with a doctor.
+                    </p>
+
+                    <a href="@Url.Action("BookAppointment","Appointment")"
+                       class="btn btn-success">
+                        Open
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Health History -->
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+
+                <div class="card-body text-center">
+
+                    <h1>📋</h1>
+
+                    <h5>Patient Health History</h5>
+
+                    <p class="text-muted">
+                        View previous visits and health records.
+                    </p>
+
+                    <a href="@Url.Action("SearchPatientHistory","HealthRecord")"
+                       class="btn btn-secondary">
+                        Open
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- View Appointments -->
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+
+                <div class="card-body text-center">
+
+                    <h1>📆</h1>
+
+                    <h5>View Appointments</h5>
+
+                    <p class="text-muted">
+                        Search and view patient appointments.
+                    </p>
+
+                    <a href="@Url.Action("ViewAppointments","Appointment")"
+                       class="btn btn-dark">
+                        Open
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Home -->
+
+        <div class="col-md-4 mx-auto">
+            <div class="card h-100 shadow-sm">
+
+                <div class="card-body text-center">
+
+                    <h1>🏠</h1>
+
+                    <h5>Home</h5>
+
+                    <p class="text-muted">
+                        Return to main dashboard.
+                    </p>
+
+                    <a href="@Url.Action("Index","Home")"
+                       class="btn btn-outline-primary">
+                        Open
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

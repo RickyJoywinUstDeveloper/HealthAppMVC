@@ -2,12 +2,52 @@
 @model IEnumerable<HealthAppMVC.Models.Appointment>
 
 
+@{
+    var appointmentsWithRecords =
+        ViewBag.AppointmentsWithRecords
+        as List<int>;
+}
+
+
 <h2 class="mb-4">📅 Upcoming Appointments</h2>
 
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success">
         @TempData["Success"]
+    </div>
+}
+
+@using (Html.BeginForm("UpcomingAppointments", "Appointment", FormMethod.Get))
+{
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+
+            <input type="text"
+                   id="doctorName"
+                   name="doctorName"
+                   class="form-control"
+                   placeholder="Search Doctor"
+                   value="@ViewBag.DoctorName" />
+
+        </div>
+
+        <div class="col-md-2">
+
+            <button class="btn btn-primary">
+                Search
+            </button>
+
+        </div>
+
+        <div class="col-md-2">
+            <a href="@Url.Action("DoctorServices", "Home")"
+               class="btn btn-secondary">
+                Back
+            </a>
+        </div>
+
     </div>
 }
 
@@ -52,6 +92,22 @@
                         </a>
                     }
 
+                    @if (item.Status == AppointmentStatus.Confirmed
+&& !appointmentsWithRecords.Contains(item.AppointmentId))
+                    {
+                        <a href="@Url.Action(
+            "Create",
+            "HealthRecord",
+            new
+            {
+                appointmentId =
+                    item.AppointmentId
+            })"
+                           class="btn btn-success">
+                            Add Health Record
+                        </a>
+                    }
+
                 </div>
 
             </div>
@@ -60,3 +116,27 @@
     }
 
 </div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#doctorName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Doctor/SearchDoctorNames',
+                    type: 'GET',
+                    data: { term: request.term },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                $("#doctorId").val(ui.item.value);
+                $("#doctorName").val(ui.item.label);
+                return false;
+            }
+        });
+
+    });
+</script>

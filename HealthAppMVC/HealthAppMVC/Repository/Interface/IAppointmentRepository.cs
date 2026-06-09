@@ -56,6 +56,13 @@ namespace HealthAppMVC.Repository.Interface
 
         List<Appointment> GetUpcomingAppointments();
         List<Appointment> GetUpcomingAppointmentsByDoctor(string doctorName);
+
+        List<string> GetAvailableSlots(
+    int doctorId,
+    DateTime scheduledDate);
+
+        List<Appointment> GetAppointmentsByPatientName(
+            string patientName);
     }
 }
     

@@ -3,20 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|c:\\users\\310189\\source\\repos\\sprint 2\\healthappmvc\\healthappmvc\\views\\healthrecord\\history.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\views\\healthrecord\\history.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|c:\\users\\310189\\source\\repos\\sprint 2\\healthappmvc\\healthappmvc\\views\\appointment\\upcomingappointments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\views\\appointment\\upcomingappointments.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|c:\\users\\310189\\source\\repos\\sprint 2\\healthappmvc\\healthappmvc\\controllers\\healthrecordcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\controllers\\healthrecordcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|c:\\users\\310189\\source\\repos\\sprint 2\\healthappmvc\\healthappmvc\\services\\implementation\\patientservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\services\\implementation\\patientservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|c:\\users\\310189\\source\\repos\\sprint 2\\healthappmvc\\healthappmvc\\services\\interface\\ipatientservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\services\\interface\\ipatientservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|c:\\users\\310189\\source\\repos\\sprint 2\\healthappmvc\\healthappmvc\\controllers\\appointmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0B9A05AC-5EA4-44AB-B0DC-F92EBE5F306E}|HealthAppMVC\\HealthAppMVC.csproj|solutionrelative:healthappmvc\\controllers\\appointmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,58 +18,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "PatientService.cs",
-              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Services\\Implementation\\PatientService.cs",
-              "RelativeDocumentMoniker": "HealthAppMVC\\Services\\Implementation\\PatientService.cs",
-              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Services\\Implementation\\PatientService.cs",
-              "RelativeToolTip": "HealthAppMVC\\Services\\Implementation\\PatientService.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-09T05:51:36.331Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "IpatientService.cs",
-              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Services\\Interface\\IpatientService.cs",
-              "RelativeDocumentMoniker": "HealthAppMVC\\Services\\Interface\\IpatientService.cs",
-              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Services\\Interface\\IpatientService.cs",
-              "RelativeToolTip": "HealthAppMVC\\Services\\Interface\\IpatientService.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABcAAAAHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-09T05:50:38.879Z",
+              "DocumentIndex": 0,
+              "Title": "UpcomingAppointments.cshtml",
+              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Appointment\\UpcomingAppointments.cshtml",
+              "RelativeDocumentMoniker": "HealthAppMVC\\Views\\Appointment\\UpcomingAppointments.cshtml",
+              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\Appointment\\UpcomingAppointments.cshtml",
+              "RelativeToolTip": "HealthAppMVC\\Views\\Appointment\\UpcomingAppointments.cshtml",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAcwGwAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-06-09T18:32:22.047Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "HealthRecordController.cs",
-              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Controllers\\HealthRecordController.cs",
-              "RelativeDocumentMoniker": "HealthAppMVC\\Controllers\\HealthRecordController.cs",
-              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Controllers\\HealthRecordController.cs",
-              "RelativeToolTip": "HealthAppMVC\\Controllers\\HealthRecordController.cs",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAgwE0AAAAAAAAAAAAAAA==",
+              "Title": "AppointmentController.cs",
+              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Controllers\\AppointmentController.cs",
+              "RelativeDocumentMoniker": "HealthAppMVC\\Controllers\\AppointmentController.cs",
+              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Controllers\\AppointmentController.cs",
+              "RelativeToolTip": "HealthAppMVC\\Controllers\\AppointmentController.cs",
+              "ViewState": "AgIAAJ0AAAAAAAAAAAAcwLYAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-09T05:43:11.807Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "History.cshtml",
-              "DocumentMoniker": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\HealthRecord\\History.cshtml",
-              "RelativeDocumentMoniker": "HealthAppMVC\\Views\\HealthRecord\\History.cshtml",
-              "ToolTip": "C:\\Users\\310189\\source\\repos\\Sprint 2\\HealthAppMVC\\HealthAppMVC\\Views\\HealthRecord\\History.cshtml",
-              "RelativeToolTip": "HealthAppMVC\\Views\\HealthRecord\\History.cshtml",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAAB4AAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-06-09T05:40:01.467Z",
+              "WhenOpened": "2026-06-09T18:18:32.687Z",
               "EditorCaption": ""
             }
           ]

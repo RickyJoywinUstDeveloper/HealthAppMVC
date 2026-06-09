@@ -1,0 +1,278 @@
+﻿
+
+@model HealthAppMVC.Models.Appointment
+
+@{
+    ViewBag.Title = "Book Appointment";
+}
+
+<link rel="stylesheet"
+      href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+            <h3>📅 Book Appointment</h3>
+        </div>
+
+        <div class="card-body">
+
+            @Html.ValidationSummary(
+                     false,
+                     "",
+                     new { @class = "text-danger" })
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(m => m.PatientId)
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Patient Name
+                    </label>
+
+                    <input type="text"
+                           id="patientSearch"
+                           class="form-control"
+                           placeholder="Search patient..." />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Specialisation
+                    </label>
+
+                    <select id="specialisation"
+                            class="form-control">
+                        <option value="">
+                            Select Specialisation
+                        </option>
+
+                        @foreach (var item
+                            in ViewBag.Specialisations)
+                        {
+                            <option value="@item">
+                                @item
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Doctor
+                    </label>
+
+                    @Html.DropDownListFor(
+                             m => m.DoctorId,
+                             new SelectList(
+                                 Enumerable.Empty<SelectListItem>()),
+                             "Select Doctor",
+                             new
+                             {
+                                 @class = "form-control",
+                                 id = "doctorDropdown"
+                             })
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Appointment Date
+                    </label>
+
+                    @Html.TextBoxFor(
+                             m => m.ScheduledDate,
+                             "{0:yyyy-MM-dd}",
+                             new
+                             {
+                                 @class = "form-control",
+                                 type = "date",
+                                 id = "appointmentDate"
+                             })
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Time Slot
+                    </label>
+
+                    @Html.DropDownListFor(
+                             m => m.TimeSlot,
+                             new SelectList(
+                                 Enumerable.Empty<SelectListItem>()),
+                             "Select Time Slot",
+                             new
+                             {
+                                 @class = "form-control",
+                                 id = "slotDropdown"
+                             })
+                </div>
+
+                <div id="slotMessage"
+                     class="alert alert-warning d-none">
+                    No slots available for this date.
+                </div>
+
+                <button type="submit"
+                        class="btn btn-success">
+                    Book Appointment
+                </button>
+
+                <a href="@Url.Action(
+                        "PatientServices",
+                        "Home")"
+                   class="btn btn-secondary">
+                    Back
+                </a>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <script>
+
+$(function () {
+
+    $("#patientSearch").autocomplete({
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action(
+                    "SearchPatientNames",
+                    "Appointment")',
+
+                {
+                    term: request.term
+                },
+
+                response);
+        },
+
+        select: function (event, ui) {
+
+            $("#PatientId").val(ui.item.value);
+
+            $("#patientSearch")
+                .val(ui.item.label);
+
+            return false;
+        }
+    });
+
+    $("#specialisation").change(function () {
+
+        let specialisation = $(this).val();
+
+        $("#doctorDropdown")
+            .empty()
+            .append(
+                '<option>Select Doctor</option>');
+
+        $.getJSON(
+            '@Url.Action(
+                "GetDoctorsBySpecialisation",
+                "Appointment")',
+
+            {
+                specialisation:
+                    specialisation
+            },
+
+            function (data) {
+
+                $.each(data,
+                    function (i, doctor) {
+
+                    $("#doctorDropdown")
+                        .append(
+
+                        $('<option>', {
+
+                            value:
+                                doctor.DoctorId,
+
+                            text:
+                                doctor.FullName
+                        }));
+                });
+            });
+    });
+
+    $("#doctorDropdown, #appointmentDate")
+        .change(loadSlots);
+
+    function loadSlots() {
+
+        let doctorId =
+            $("#doctorDropdown").val();
+
+        let date =
+            $("#appointmentDate").val();
+
+        if (!doctorId || !date)
+            return;
+
+        $.getJSON(
+            '@Url.Action(
+                "GetAvailableSlots",
+                "Appointment")',
+
+            {
+                doctorId: doctorId,
+                scheduledDate: date
+            },
+
+            function (data) {
+
+                $("#slotDropdown")
+                    .empty();
+
+                if (data.length === 0) {
+
+                    $("#slotMessage")
+                        .removeClass("d-none");
+
+                    $("#slotDropdown")
+                        .append(
+                        '<option>No Slots Available</option>');
+
+                    return;
+                }
+
+                $("#slotMessage")
+                    .addClass("d-none");
+
+                $("#slotDropdown")
+                    .append(
+                    '<option>Select Time Slot</option>');
+
+                $.each(data,
+                    function (i, slot) {
+
+                    $("#slotDropdown")
+                        .append(
+
+                        $('<option>', {
+
+                            value: slot,
+                            text: slot
+                        }));
+                });
+            });
+    }
+
+});
+
+    </script>
+
+}

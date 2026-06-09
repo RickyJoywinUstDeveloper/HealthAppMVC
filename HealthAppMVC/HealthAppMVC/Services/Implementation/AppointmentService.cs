@@ -53,6 +53,29 @@ namespace HealthAppMVC.Services.Implementation
                     "Past dates are not allowed.");
             }
 
+            if (appointment.ScheduledDate.Date ==
+    DateTime.Today)
+            {
+                DateTime slotDateTime;
+
+                if (!DateTime.TryParse(
+                        appointment.ScheduledDate
+                            .ToString("yyyy-MM-dd")
+                        + " "
+                        + appointment.TimeSlot,
+                        out slotDateTime))
+                {
+                    throw new Exception(
+                        "Invalid appointment time slot.");
+                }
+
+                if (slotDateTime <= DateTime.Now)
+                {
+                    throw new Exception(
+                        "Past time slots cannot be booked.");
+                }
+            }
+
             bool available =
                 _appointmentRepository
                 .IsSlotAvailable(
@@ -195,6 +218,35 @@ GetUpcomingAppointmentsByDoctor(
             return _appointmentRepository
                 .GetUpcomingAppointmentsByDoctor(
                     doctorName);
+        }
+
+
+        public IEnumerable<string>
+    GetAvailableSlots(
+        int doctorId,
+        DateTime scheduledDate)
+        {
+            return _appointmentRepository
+                .GetAvailableSlots(
+                    doctorId,
+                    scheduledDate);
+        }
+
+
+        public IEnumerable<Appointment>
+    GetAppointmentsByPatientName(
+        string patientName)
+        {
+            return _appointmentRepository
+                .GetAppointmentsByPatientName(
+                    patientName);
+        }
+
+        public bool HealthRecordExists(
+    int appointmentId)
+        {
+            return _appointmentRepository
+                .HealthRecordExists(appointmentId);
         }
     }
 }

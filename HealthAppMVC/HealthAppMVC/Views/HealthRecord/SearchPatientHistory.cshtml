@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<HealthAppMVC.Models.HealthRecord>
+
+@{
     ViewBag.Title =
         "Patient Health History";
 }
@@ -30,6 +32,58 @@
     View History
 
 </button>
+
+<a href="@Url.Action("DoctorServices", "Home")"
+   class="btn btn-secondary ms-2">
+    Back
+</a>
+
+
+@if (Model != null && Model.Any())
+{
+    <div class="row mt-4">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 mb-4">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">
+                            👨‍⚕️ @item.DoctorName
+                        </h5>
+
+                        <p>
+                            <strong>Specialisation:</strong>
+                            @item.Specialisation
+                        </p>
+
+                        <p>
+                            <strong>Visit Date:</strong>
+                            @item.VisitDate.ToShortDateString()
+                        </p>
+
+                        <p>
+                            <strong>Diagnosis:</strong>
+                            @item.Diagnosis
+                        </p>
+
+                        <p>
+                            <strong>Prescription:</strong>
+                            @item.Prescription
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+}
 
 @section Scripts{
 
@@ -66,9 +120,9 @@ $(function () {
         }
 
         window.location =
-            '/HealthRecord/History?patientId=' + id;
+            '/HealthRecord/SearchPatientHistory?patientId=' + id;
     });
-});
+    });
 
     </script>
 

@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using HealthAppMVC.Constants;
 
 namespace HealthAppMVC.Repository.Implementation
 {
@@ -242,7 +243,7 @@ namespace HealthAppMVC.Repository.Implementation
                   WHERE DoctorId=@DoctorId
                   AND ScheduledDate=@Date
                   AND TimeSlot=@TimeSlot
-                  AND Status<>'Cancelled'";
+                  AND Status <> @Cancelled";
 
                 SqlCommand cmd =
                     new SqlCommand(query, con);
@@ -258,6 +259,9 @@ namespace HealthAppMVC.Repository.Implementation
                 cmd.Parameters.AddWithValue(
                     "@TimeSlot",
                     timeSlot);
+                cmd.Parameters.AddWithValue(
+    "@Cancelled",
+    (int)AppointmentStatus.Cancelled);
 
                 con.Open();
 
@@ -446,7 +450,7 @@ namespace HealthAppMVC.Repository.Implementation
           WHERE DoctorId=@DoctorId
           AND ScheduledDate=@ScheduledDate
           AND TimeSlot=@TimeSlot
-          AND Status<>'Cancelled'";
+          AND Status <> @Cancelled";
 
                 SqlCommand cmd =
                     new SqlCommand(query, con);
@@ -462,6 +466,10 @@ namespace HealthAppMVC.Repository.Implementation
                 cmd.Parameters.AddWithValue(
                     "@TimeSlot",
                     timeSlot);
+
+                cmd.Parameters.AddWithValue(
+    "@Cancelled",
+    (int)AppointmentStatus.Cancelled);
 
                 con.Open();
 
@@ -487,7 +495,7 @@ namespace HealthAppMVC.Repository.Implementation
           WHERE PatientId=@PatientId
           AND DoctorId=@DoctorId
           AND ScheduledDate=@ScheduledDate
-          AND Status<>'Cancelled'";
+          AND Status <> @Cancelled";
 
                 SqlCommand cmd =
                     new SqlCommand(query, con);
@@ -503,6 +511,10 @@ namespace HealthAppMVC.Repository.Implementation
                 cmd.Parameters.AddWithValue(
                     "@ScheduledDate",
                     scheduledDate.Date);
+
+                cmd.Parameters.AddWithValue(
+    "@Cancelled",
+    (int)AppointmentStatus.Cancelled);
 
                 con.Open();
 
@@ -528,7 +540,7 @@ namespace HealthAppMVC.Repository.Implementation
           WHERE PatientId=@PatientId
           AND ScheduledDate=@ScheduledDate
           AND TimeSlot=@TimeSlot
-          AND Status<>'Cancelled'";
+          AND Status <> @Cancelled";
 
                 SqlCommand cmd =
                     new SqlCommand(query, con);
@@ -544,6 +556,10 @@ namespace HealthAppMVC.Repository.Implementation
                 cmd.Parameters.AddWithValue(
                     "@TimeSlot",
                     timeSlot);
+
+                cmd.Parameters.AddWithValue(
+    "@Cancelled",
+    (int)AppointmentStatus.Cancelled);
 
                 con.Open();
 
@@ -659,6 +675,102 @@ GetUpcomingAppointmentsByDoctor(
                 while (reader.Read())
                 {
                     appointments.Add(MapAppointment(reader));
+                }
+            }
+
+            return appointments;
+        }
+
+
+        public List<string> GetAvailableSlots(
+    int doctorId,
+    DateTime scheduledDate)
+        {
+            List<string> bookedSlots =
+                new List<string>();
+
+            using (SqlConnection con =
+                new SqlConnection(_connectionString))
+            {
+                string query =
+                @"SELECT TimeSlot
+          FROM Appointments
+          WHERE DoctorId=@DoctorId
+          AND ScheduledDate=@Date
+          AND Status <> @Cancelled";
+
+                SqlCommand cmd =
+                    new SqlCommand(query, con);
+
+                cmd.Parameters.AddWithValue(
+                    "@DoctorId",
+                    doctorId);
+
+                cmd.Parameters.AddWithValue(
+                    "@Date",
+                    scheduledDate.Date);
+
+                cmd.Parameters.AddWithValue(
+                    "@Cancelled",
+                    (int)AppointmentStatus.Cancelled);
+
+                con.Open();
+
+                SqlDataReader reader =
+                    cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    bookedSlots.Add(
+                        reader["TimeSlot"].ToString());
+                }
+            }
+
+            return TimeSlots.Slots
+                .Except(bookedSlots)
+                .ToList();
+        }
+
+        public List<Appointment>
+    GetAppointmentsByPatientName(
+        string patientName)
+        {
+            List<Appointment> appointments =
+                new List<Appointment>();
+
+            using (SqlConnection con =
+                new SqlConnection(_connectionString))
+            {
+                string query =
+                @"SELECT
+            A.*,
+            P.FullName AS PatientName,
+            D.FullName AS DoctorName
+          FROM Appointments A
+          INNER JOIN Patients P
+            ON A.PatientId=P.PatientId
+          INNER JOIN Doctors D
+            ON A.DoctorId=D.DoctorId
+          WHERE P.FullName
+            LIKE '%' + @Name + '%'
+          ORDER BY A.ScheduledDate DESC";
+
+                SqlCommand cmd =
+                    new SqlCommand(query, con);
+
+                cmd.Parameters.AddWithValue(
+                    "@Name",
+                    patientName);
+
+                con.Open();
+
+                SqlDataReader reader =
+                    cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    appointments.Add(
+                        MapAppointment(reader));
                 }
             }
 

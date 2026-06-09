@@ -84,15 +84,15 @@ namespace HealthAppMVC.Controllers
         [HttpGet]
         public ActionResult Confirm(int id)
         {
-           
-                _appointmentService
-                    .ConfirmAppointment(id);
 
-                TempData["Success"] =
-                    "Appointment confirmed.";
+            _appointmentService
+                .ConfirmAppointment(id);
 
-                return RedirectToAction("UpcomingAppointments");
-            
+            TempData["Success"] =
+                "Appointment confirmed.";
+
+            return RedirectToAction("UpcomingAppointments");
+
         }
 
         [HttpGet]
@@ -151,23 +151,33 @@ namespace HealthAppMVC.Controllers
                     "FullName");
         }
 
-        public ActionResult UpcomingAppointments(
-    string doctorName = "")
+        public ActionResult UpcomingAppointments(string doctorName)
         {
-            IEnumerable<Appointment> app;
-
-
-            var appointments = _appointmentService.GetUpcomingAppointments();
+            var appointments =
+                _appointmentService
+                .GetUpcomingAppointments();
 
             if (!string.IsNullOrWhiteSpace(doctorName))
             {
                 appointments = appointments
                     .Where(a => a.DoctorName
-                    .ToLower()
-                    .Contains(doctorName.ToLower()));
+                        .ToLower()
+                        .Contains(doctorName.ToLower()));
             }
 
-            ViewBag.DoctorName = doctorName; // 🔥 IMPORTANT
+            var appointmentsWithRecords =
+                appointments
+                    .Where(a =>
+                        _appointmentService
+                            .HealthRecordExists(
+                                a.AppointmentId))
+                    .Select(a => a.AppointmentId)
+                    .ToList();
+
+            ViewBag.AppointmentsWithRecords =
+                appointmentsWithRecords;
+
+            ViewBag.DoctorName = doctorName;
 
             return View(appointments);
         }
@@ -189,6 +199,133 @@ namespace HealthAppMVC.Controllers
                 doctors,
                 JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult BookAppointment()
+        {
+            ViewBag.Specialisations =
+                Enum.GetValues(
+                    typeof(SpecialisationType));
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult BookAppointment(
+    Appointment appointment)
+        {
+            try
+            {
+                _appointmentService
+                    .BookAppointment(
+                        appointment);
+
+                TempData["Success"] =
+                    "Appointment booked successfully.";
+
+                return RedirectToAction(
+                    "PatientServices",
+                    "Home");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(
+                    "",
+                    ex.Message);
+
+                ViewBag.Specialisations =
+                    Enum.GetValues(
+                        typeof(SpecialisationType));
+
+                return View(appointment);
+            }
+        }
+
+        public JsonResult SearchPatientNames(
+    string term)
+        {
+            var patients =
+                _patientService
+                .SearchByName(term)
+                .Select(p => new
+                {
+                    label = p.FullName,
+                    value = p.PatientId
+                })
+                .ToList();
+
+            return Json(
+                patients,
+                JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetDoctorsBySpecialisation(
+    string specialisation)
+        {
+            SpecialisationType sp;
+
+            if (!Enum.TryParse(
+                    specialisation,
+                    true,
+                    out sp))
+            {
+                return Json(
+                    new List<object>(),
+                    JsonRequestBehavior.AllowGet);
+            }
+
+            var doctors =
+                _doctorService
+                .SearchBySpecialisation(sp)
+                .Where(d => d.IsActive)
+                .Select(d => new
+                {
+                    DoctorId = d.DoctorId,
+                    FullName = d.FullName
+                })
+                .ToList();
+
+            return Json(
+                doctors,
+                JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetAvailableSlots(
+    int doctorId,
+    DateTime scheduledDate)
+        {
+            var slots =
+                _appointmentService
+                .GetAvailableSlots(
+                    doctorId,
+                    scheduledDate);
+
+            return Json(
+                slots,
+                JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult ViewAppointments(
+    string patientName)
+        {
+            IEnumerable<Appointment>
+                appointments =
+                    Enumerable.Empty<Appointment>();
+
+            if (!string.IsNullOrWhiteSpace(
+                    patientName))
+            {
+                appointments =
+                    _appointmentService
+                    .GetAppointmentsByPatientName(
+                        patientName);
+            }
+
+            return View(appointments);
+        }
+
+        
 
 
     }

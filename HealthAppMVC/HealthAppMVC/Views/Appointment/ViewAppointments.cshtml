@@ -1,0 +1,169 @@
+﻿@model IEnumerable<HealthAppMVC.Models.Appointment>
+@using HealthAppMVC.Models
+
+@{
+    ViewBag.Title = "View Appointments";
+}
+
+<link rel="stylesheet"
+      href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-primary text-white">
+            <h3>📆 View Appointments</h3>
+        </div>
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row">
+
+                    <div class="col-md-8">
+                        <input type="text"
+                               id="patientSearch"
+                               name="patientName"
+                               class="form-control"
+                               placeholder="Search patient..."
+                               value="@Request["patientName"]" />
+                    </div>
+
+                    <div class="col-md-4">
+                        <button type="submit"
+                                class="btn btn-primary">
+                            Search
+                        </button>
+
+                        <a href="@Url.Action(
+                                    "PatientServices",
+                                    "Home")"
+                           class="btn btn-secondary">
+                            Back
+                        </a>
+                    </div>
+
+                </div>
+
+            </form>
+
+            <hr />
+
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <div class="card mb-3 border-start border-4 border-primary">
+
+                        <div class="card-body">
+
+                            <h5>
+                                👤 @item.PatientName
+                            </h5>
+
+                            <p>
+                                <strong>Doctor:</strong>
+                                @item.DoctorName
+                            </p>
+
+                            <p>
+                                <strong>Date:</strong>
+                                @item.ScheduledDate.ToString("dd-MMM-yyyy")
+                            </p>
+
+                            <p>
+                                <strong>Time:</strong>
+                                @item.TimeSlot
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+
+                                @if (item.Status ==
+                                     AppointmentStatus.Pending)
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        Pending
+                                    </span>
+                                }
+                                else if (item.Status ==
+                                         AppointmentStatus.Confirmed)
+                                {
+                                    <span class="badge bg-success">
+                                        Confirmed
+                                    </span>
+                                }
+                                else if (item.Status ==
+                                         AppointmentStatus.Completed)
+                                {
+                                    <span class="badge bg-primary">
+                                        Completed
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Cancelled
+                                    </span>
+                                }
+                            </p>
+
+                            @if (!string.IsNullOrEmpty(
+                                     item.CancellationReason))
+                            {
+                                <p>
+                                    <strong>Reason:</strong>
+                                    @item.CancellationReason
+                                </p>
+                            }
+
+                        </div>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    No appointments found.
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts{
+
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <script>
+
+$(function () {
+
+    $("#patientSearch").autocomplete({
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action(
+                    "SearchPatientNames",
+                    "Appointment")',
+
+                {
+                    term: request.term
+                },
+
+                response);
+        }
+    });
+
+});
+
+    </script>
+
+}

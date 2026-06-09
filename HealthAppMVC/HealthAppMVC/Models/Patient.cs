@@ -10,8 +10,9 @@ namespace HealthAppMVC.Models
     {
         public int PatientId { get; set; }
 
-        [Required(ErrorMessage = "Name is required")]
         [StringLength(100)]
+        [RegularExpression(@"^[A-Za-z ]+$",
+    ErrorMessage = "Name can contain only letters and spaces")]
         public string FullName { get; set; }
 
         [Required]

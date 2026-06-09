@@ -115,6 +115,53 @@ namespace HealthAppMVC.Controllers
             }
         }
 
-        
+        public ActionResult PatientServices()
+        {
+            return View();
+        }
+
+        public ActionResult SearchPatient()
+        {
+            var patients = _patientService.GetAllPatients();
+
+            return View(patients);
+        }
+
+
+        public JsonResult SearchPatientNames(
+    string term)
+        {
+            var patients =
+                _patientService
+                .SearchByName(term)
+                .Select(p => new
+                {
+                    label = p.FullName,
+                    value = p.FullName
+                })
+                .ToList();
+
+            return Json(
+                patients,
+                JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult EditPatientByName(
+    int id)
+        {
+            return RedirectToAction(
+                "Edit",
+                new { id });
+        }
+
+        public ActionResult PatientSearch(
+    string patientName)
+        {
+            var patients = _patientService.GetAllPatients();
+
+            return View(patients);
+        }
+
+
     }
 }

@@ -365,13 +365,17 @@
     <Content Include="Views\Appointment\Cancel.cshtml" />
     <Content Include="Views\Appointment\Delete.cshtml" />
     <Content Include="Views\HealthRecord\Create.cshtml" />
-    <Content Include="Views\HealthRecord\History.cshtml" />
     <Content Include="Views\HealthRecord\Details.cshtml" />
     <Content Include="Views\Home\DoctorServices.cshtml" />
     <Content Include="Views\Doctor\SearchDoctor.cshtml" />
     <Content Include="Views\Doctor\DoctorSearch.cshtml" />
     <Content Include="Views\HealthRecord\SearchPatientHistory.cshtml" />
     <Content Include="Views\Appointment\UpcomingAppointments.cshtml" />
+    <Content Include="Views\Home\PatientServices.cshtml" />
+    <Content Include="Views\Patient\SearchPatient.cshtml" />
+    <Content Include="Views\Appointment\BookAppointment.cshtml" />
+    <Content Include="Views\Appointment\ViewAppointments.cshtml" />
+    <Content Include="Views\Patient\PatientSearch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
