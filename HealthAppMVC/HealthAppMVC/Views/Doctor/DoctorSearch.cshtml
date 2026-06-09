@@ -1,0 +1,96 @@
+﻿@model IEnumerable<HealthAppMVC.Models.Doctor>
+@using HealthAppMVC.Models
+
+@{
+    ViewBag.Title = "Doctor Search";
+}
+
+<h2 class="mb-4">View Doctor Details</h2>
+
+@using (Html.BeginForm("DoctorSearch",
+                       "Doctor",
+                       FormMethod.Get))
+{
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+
+            <input type="text"
+                   name="doctorName"
+                   class="form-control"
+                   placeholder="Doctor Name" />
+
+        </div>
+
+        <div class="col-md-4">
+
+            @Html.DropDownList(
+                "specialisation",
+                new SelectList(
+                    Enum.GetNames(
+                    typeof(SpecialisationType))),
+                "-- Select Specialisation --",
+                new { @class = "form-control" })
+
+        </div>
+
+        <div class="col-md-2">
+
+            <button class="btn btn-primary">
+                Search
+            </button>
+
+        </div>
+
+    </div>
+}
+
+<div class="row">
+
+    @foreach (var doctor in Model)
+    {
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow h-100">
+
+                <div class="card-body">
+
+                    <h4>
+                        👨‍⚕️ @doctor.FullName
+                    </h4>
+
+                    <hr />
+
+                    <p>
+                        <strong>Specialisation:</strong>
+                        @doctor.Specialisation
+                    </p>
+
+                    <p>
+                        <strong>Experience:</strong>
+                        @doctor.YearsOfExperience Years
+                    </p>
+
+                    <p>
+                        <strong>Fee:</strong>
+                        ₹@doctor.ConsultationFee
+                    </p>
+
+                    <p>
+                        <strong>Email:</strong>
+                        @doctor.DoctorEmail
+                    </p>
+
+                    <p>
+                        <strong>Phone:</strong>
+                        @doctor.DoctorPhoneNo
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>

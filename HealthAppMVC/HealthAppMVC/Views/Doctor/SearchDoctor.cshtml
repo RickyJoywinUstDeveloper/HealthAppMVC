@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Search Doctor";
+}
+
+<h2>Search Doctor</h2>
+
+<div class="form-group">
+
+    <label>Doctor Name</label>
+
+    <input type="text"
+           id="doctorName"
+           class="form-control" />
+
+    <input type="hidden"
+           id="doctorId" />
+
+</div>
+
+<br />
+
+<button id="btnEdit"
+        class="btn btn-primary">
+    Edit Doctor
+</button>
+
+@section Scripts{
+
+    <script>
+
+$(function () {
+
+    $("#doctorName").autocomplete({
+
+        source: '@Url.Action("SearchDoctorNames","Doctor")',
+
+        minLength: 1,
+
+        select: function (event, ui) {
+
+            $("#doctorId").val(ui.item.value);
+        }
+    });
+
+    $("#btnEdit").click(function () {
+
+        var id = $("#doctorId").val();
+
+        if (id) {
+
+            window.location =
+                '/Doctor/EditDoctorByName?id=' + id;
+        }
+    });
+});
+
+    </script>
+
+}

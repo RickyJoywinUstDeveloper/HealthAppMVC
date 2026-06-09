@@ -1,0 +1,97 @@
+﻿@model IEnumerable<HealthAppMVC.Models.Appointment>
+
+<div class="container mt-4">
+
+    <h2 class="text-center mb-4">
+        📅 Upcoming Appointments
+    </h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            @using (Html.BeginForm("UpcomingAppointments", "Appointment", FormMethod.Get))
+            {
+                <div class="row">
+                    <div class="col-md-9">
+                        <input type="text"
+                               id="doctorName"
+                               name="doctorName"
+                               class="form-control"
+                               placeholder="🔍 Search Doctor Name"
+                               value="@Request["doctorName"]" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            No upcoming appointments found.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var appointment in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow border-0 h-100">
+                        <div class="card-header bg-primary text-white">
+                            Appointment #@appointment.AppointmentId
+                        </div>
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                👨‍⚕️ @appointment.DoctorName
+                            </h5>
+
+                            <p class="card-text">
+                                👤 <strong>Patient:</strong>
+                                @appointment.PatientName
+                            </p>
+
+                            <p class="card-text">
+                                📅 <strong>Date:</strong>
+                                @appointment.ScheduledDate.ToString("dd MMM yyyy")
+                            </p>
+
+                            <p class="card-text">
+                                ⏰ <strong>Time Slot:</strong>
+                                @appointment.TimeSlot
+                            </p>
+
+                            <p class="card-text">
+                                📌 <strong>Status:</strong>
+                                @appointment.Status
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>
+
+@section Scripts
+{
+    <script>
+        $(function () {
+
+            $("#doctorName").autocomplete({
+                source: '@Url.Action("SearchDoctorNames", "Appointment")',
+                minLength: 1
+            });
+
+        });
+    </script>
+}
