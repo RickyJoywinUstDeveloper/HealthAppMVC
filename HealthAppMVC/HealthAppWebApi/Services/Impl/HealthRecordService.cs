@@ -80,35 +80,47 @@ namespace HealthAppWebApi.Services.Impl
             return new HealthRecordDto
             {
                 HealthRecordId =
-                    record.HealthRecordId,
+         record.HealthRecordId,
+
+                AppointmentId =
+         record.AppointmentId,
+
+                PatientId =
+         record.Appointment != null
+             ? record.Appointment.PatientId
+             : 0,
 
                 VisitDate =
-                    record.VisitDate,
+         record.VisitDate,
 
                 PatientName =
-                    record.Appointment
-                        .Patient
-                        .FullName,
+         record.Appointment != null
+         && record.Appointment.Patient != null
+             ? record.Appointment
+                 .Patient.FullName
+             : "Unknown Patient",
 
                 DoctorName =
-                    record.Appointment
-                        .Doctor
-                        .FullName,
+         record.Appointment != null
+         && record.Appointment.Doctor != null
+             ? record.Appointment
+                 .Doctor.FullName
+             : "Unknown Doctor",
 
                 Diagnosis =
-                    record.Diagnosis,
+         record.Diagnosis,
 
                 Prescription =
-                    record.Prescription,
+         record.Prescription,
 
                 Notes =
-                    record.Notes
+         record.Notes
             };
         }
 
         public async Task<List<HealthRecordDto>>
-            GetPatientHistoryAsync(
-                int patientId)
+    GetPatientHistoryAsync(
+        int patientId)
         {
             var records =
                 await _recordRepo
@@ -121,18 +133,30 @@ namespace HealthAppWebApi.Services.Impl
                     HealthRecordId =
                         h.HealthRecordId,
 
+                    AppointmentId =
+                        h.AppointmentId,
+
+                    PatientId =
+                        h.Appointment != null
+                            ? h.Appointment.PatientId
+                            : 0,
+
                     VisitDate =
                         h.VisitDate,
 
                     PatientName =
-                        h.Appointment
-                            .Patient
-                            .FullName,
+                        h.Appointment != null
+                        && h.Appointment.Patient != null
+                            ? h.Appointment
+                                .Patient.FullName
+                            : "Unknown Patient",
 
                     DoctorName =
-                        h.Appointment
-                            .Doctor
-                            .FullName,
+                        h.Appointment != null
+                        && h.Appointment.Doctor != null
+                            ? h.Appointment
+                                .Doctor.FullName
+                            : "Unknown Doctor",
 
                     Diagnosis =
                         h.Diagnosis,

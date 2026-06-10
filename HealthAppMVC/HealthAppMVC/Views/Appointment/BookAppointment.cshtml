@@ -29,43 +29,60 @@
                 @Html.HiddenFor(
                     m => m.PatientId)
 
-                <div class="mb-3">
+            <div class="mb-3">
 
-                    <label class="form-label">
-                        Patient Name
-                    </label>
+                <label class="form-label">
+                    Patient Name
+                </label>
 
-                    <input type="text"
-                           id="patientSearch"
-                           class="form-control"
-                           placeholder="Search patient..." />
+                <input type="text"
+                       id="patientSearch"
+                       class="form-control"
+                       placeholder="Search patient..." />
 
-                </div>
 
-                <div class="mb-3">
+                @Html.ValidationMessageFor(
+                    m => m.PatientId,
+                    "",
+                    new { @class = "text-danger" })
 
-                    <label class="form-label">
-                        Specialisation
-                    </label>
 
-                    <select id="specialisation"
-                            class="form-control">
+                <span id="patientError"
+                      class="text-danger">
+                </span>
 
-                        <option value="">
-                            Select Specialisation
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Specialisation
+                </label>
+
+                <select id="specialisation"
+                        class="form-control">
+
+                    <option value="">
+                        Select Specialisation
+                    </option>
+
+                    @foreach (var item
+                        in ViewBag.Specialisations)
+                    {
+                        <option value="@item">
+                            @item
                         </option>
+                    }
 
-                        @foreach (var item
-                            in ViewBag.Specialisations)
-                        {
-                            <option value="@item">
-                                @item
-                            </option>
-                        }
+                </select>
 
-                    </select>
+                <span id="specialisationError"
+                      class="text-danger">
+                </span>
 
-                </div>
+
+
+            </div>
 
                 <div class="mb-3">
 
@@ -83,6 +100,13 @@
                             @class = "form-control",
                             id = "doctorDropdown"
                         })
+
+
+                    @Html.ValidationMessageFor(
+                                           m => m.DoctorId,
+                                           "",
+                                           new { @class = "text-danger" })
+
 
                 </div>
 
@@ -102,6 +126,13 @@
                             id = "appointmentDate"
                         })
 
+
+                    @Html.ValidationMessageFor(
+                                            m => m.ScheduledDate,
+                                            "",
+                                            new { @class = "text-danger" })
+
+
                 </div>
 
                 <div class="mb-3">
@@ -120,6 +151,13 @@
                             @class = "form-control",
                             id = "slotDropdown"
                         })
+
+
+                    @Html.ValidationMessageFor(
+                                           m => m.TimeSlot,
+                                           "",
+                                           new { @class = "text-danger" })
+
 
                 </div>
 
@@ -161,6 +199,8 @@
 
         $(function () {
 
+            let patientSelected = false;
+
             $("#patientSearch").autocomplete({
 
                 source: function (request, response) {
@@ -174,8 +214,30 @@
                             term: request.term
                         },
 
-                        response);
+                        function (data) {
+
+                            response(data);
+
+                            if (data.length === 0) {
+
+                                $("#patientError")
+                                    .text(
+                                        "No patient available.");
+
+                                $("#PatientId")
+                                    .val("");
+
+                                patientSelected = false;
+                            }
+                            else {
+
+                                $("#patientError")
+                                    .text("");
+                            }
+                        });
                 },
+
+                minLength: 1,
 
                 select: function (event, ui) {
 
@@ -185,7 +247,25 @@
                     $("#patientSearch")
                         .val(ui.item.label);
 
+                    $("#patientError")
+                        .text("");
+
+                    patientSelected = true;
+
                     return false;
+                }
+            });
+
+            $("#patientSearch").blur(function () {
+
+                if (!patientSelected) {
+
+                    $("#patientError")
+                        .text(
+                            "Please select a registered patient.");
+
+                    $("#PatientId")
+                        .val("");
                 }
             });
 
@@ -291,6 +371,62 @@
                             });
                     });
             }
+
+
+            $("form").submit(function (e) {
+
+                let isValid = true;
+
+                if ($("#specialisation").val() === "") {
+
+                    $("#specialisationError")
+                        .text("Specialisation is required.");
+
+                    isValid = false;
+                }
+                else {
+
+                    $("#specialisationError")
+                        .text("");
+                }
+
+                if ($("#PatientId").val() === "") {
+
+                    $("#patientError")
+                        .text("Patient is required.");
+
+                    isValid = false;
+                }
+
+                if ($("#doctorDropdown").val() === "") {
+
+                    $("span[data-valmsg-for='DoctorId']")
+                        .text("Doctor is required.");
+
+                    isValid = false;
+                }
+
+                if ($("#appointmentDate").val() === "") {
+
+                    $("span[data-valmsg-for='ScheduledDate']")
+                        .text("Appointment date is required.");
+
+                    isValid = false;
+                }
+
+                if ($("#slotDropdown").val() === "") {
+
+                    $("span[data-valmsg-for='TimeSlot']")
+                        .text("Time slot is required.");
+
+                    isValid = false;
+                }
+
+                if (!isValid) {
+
+                    e.preventDefault();
+                }
+            });
 
         });
 

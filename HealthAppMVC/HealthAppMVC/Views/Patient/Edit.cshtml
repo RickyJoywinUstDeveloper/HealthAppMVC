@@ -151,4 +151,32 @@
 
     @Scripts.Render("~/bundles/jqueryval")
 
+    <script>
+
+        $(document).ready(function () {
+
+            $("#DateOfBirth").change(function () {
+
+                var selectedDate =
+                    new Date($(this).val());
+
+                var today =
+                    new Date();
+
+                today.setHours(0, 0, 0, 0);
+
+                $(".dob-error").remove();
+
+                if (selectedDate > today) {
+
+                    $(this).after(
+                        '<span class="text-danger dob-error">' +
+                        'Future date not allowed.' +
+                        '</span>');
+                }
+            });
+
+        });
+
+    </script>
 }

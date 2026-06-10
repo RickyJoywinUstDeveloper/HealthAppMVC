@@ -263,9 +263,15 @@ namespace HealthAppMVC.Controllers
             }
         }
 
-        public ActionResult SearchDoctor()
+        public async Task<ActionResult> SearchDoctor()
         {
-            return View();
+
+            var doctors =
+                    await _doctorService
+                        .GetAllDoctorsAsync();
+
+            return View(doctors);
+
         }
 
         public async Task<JsonResult>

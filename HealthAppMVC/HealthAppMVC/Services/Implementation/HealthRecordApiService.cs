@@ -50,7 +50,14 @@ namespace HealthAppMVC.Services.Implementation
                 await _client.GetAsync(
                     $"healthrecords/{id}");
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                string error =
+                    await response.Content
+                        .ReadAsStringAsync();
+
+                throw new Exception(error);
+            }
 
             string json =
                 await response.Content
@@ -69,7 +76,14 @@ namespace HealthAppMVC.Services.Implementation
                 await _client.GetAsync(
                     $"healthrecords/patient/{patientId}");
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                string error =
+                    await response.Content
+                        .ReadAsStringAsync();
+
+                throw new Exception(error);
+            }
 
             string json =
                 await response.Content

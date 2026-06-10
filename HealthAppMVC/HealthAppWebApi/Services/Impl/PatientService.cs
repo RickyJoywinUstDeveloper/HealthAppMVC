@@ -32,10 +32,15 @@ namespace HealthAppWebApi.Services.Impl
                 {
                     PatientId = p.PatientId,
                     FullName = p.FullName,
+
+                    DateOfBirth =
+                p.DateOfBirth,
+
                     Gender = p.Gender.ToString(),
                     Email = p.Email,
                     PhoneNumber = p.PhoneNumber,
-                    InsuranceId = p.InsuranceId
+                    InsuranceId = p.InsuranceId,
+                     CreatedDate = p.CreatedDate
                 }).ToList();
         }
 
@@ -52,10 +57,15 @@ namespace HealthAppWebApi.Services.Impl
             {
                 PatientId = patient.PatientId,
                 FullName = patient.FullName,
+
+                DateOfBirth =
+                patient.DateOfBirth,
+
                 Gender = patient.Gender.ToString(),
                 Email = patient.Email,
                 PhoneNumber = patient.PhoneNumber,
-                InsuranceId = patient.InsuranceId
+                InsuranceId = patient.InsuranceId,
+                CreatedDate = patient.CreatedDate
             };
         }
 
@@ -151,8 +161,23 @@ namespace HealthAppWebApi.Services.Impl
                 {
                     PatientId = p.PatientId,
                     FullName = p.FullName,
+
+                    DateOfBirth =
+                p.DateOfBirth,
+
                     Email = p.Email,
-                    Gender = p.Gender.ToString()
+                    Gender = p.Gender.ToString(),
+
+
+                PhoneNumber =
+                p.PhoneNumber,
+
+                    InsuranceId =
+                p.InsuranceId,
+
+                    CreatedDate =
+                p.CreatedDate
+
                 }).ToList();
         }
 

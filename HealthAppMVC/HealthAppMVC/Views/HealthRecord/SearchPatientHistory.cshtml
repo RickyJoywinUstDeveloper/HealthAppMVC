@@ -22,6 +22,10 @@
     <input type="hidden"
            id="patientId" />
 
+    <span id="patientError"
+          class="text-danger">
+    </span>
+
 </div>
 
 <br />
@@ -38,68 +42,72 @@
     Back
 </a>
 
-@if (Model != null && Model.Any())
-{
-    <div class="row mt-4">
+<div id="historyContainer">
 
-        @foreach (var item in Model)
-        {
-            <div class="col-md-6 mb-4">
+    @if (Model != null && Model.Any())
+    {
+        <div class="row mt-4">
 
-                <div class="card shadow-sm border-0 h-100">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 mb-4">
 
-                    <div class="card-body">
+                    <div class="card shadow-sm border-0 h-100">
 
-                        <h5 class="card-title">
-                            👨‍⚕️ @item.DoctorName
-                        </h5>
+                        <div class="card-body">
 
-                        <p>
-                            <strong>
-                                Visit Date:
-                            </strong>
+                            <h5 class="card-title">
+                                👨‍⚕️ @item.DoctorName
+                            </h5>
 
-                            @item.VisitDate
-                            .ToString("dd-MM-yyyy")
-                        </p>
+                            <p>
+                                <strong>
+                                    Visit Date:
+                                </strong>
 
-                        <p>
-                            <strong>
-                                Diagnosis:
-                            </strong>
+                                @item.VisitDate
+                                .ToString("dd-MM-yyyy")
+                            </p>
 
-                            @item.Diagnosis
-                        </p>
+                            <p>
+                                <strong>
+                                    Diagnosis:
+                                </strong>
 
-                        <p>
-                            <strong>
-                                Prescription:
-                            </strong>
+                                @item.Diagnosis
+                            </p>
 
-                            @item.Prescription
-                        </p>
+                            <p>
+                                <strong>
+                                    Prescription:
+                                </strong>
 
-                        <p>
-                            <strong>
-                                Notes:
-                            </strong>
+                                @item.Prescription
+                            </p>
 
-                            @item.Notes
-                        </p>
+                            <p>
+                                <strong>
+                                    Notes:
+                                </strong>
+
+                                @item.Notes
+                            </p>
+
+                        </div>
 
                     </div>
 
                 </div>
+            }
 
-            </div>
-        }
+        </div>
+    }
 
     </div>
-}
 
-@section Scripts{
+    @section Scripts{
 
-    <script>
+        <script>
 
         $(function () {
 
@@ -122,27 +130,41 @@
                     }
                 });
 
-            $("#btnHistory")
-                .click(function () {
+            $("#btnHistory").click(function () {
 
-                    var id =
-                        $("#patientId")
-                            .val();
+                var id =
+                    $("#patientId").val();
 
-                    if (!id || id === "0") {
+                var patientName =
+                    $("#patientName").val();
 
-                        alert(
-                            "Please select a patient from suggestions");
+                if (!patientName) {
 
-                        return;
-                    }
+                    $("#patientError")
+                        .text("Please enter patient name.");
 
-                    window.location =
-                        '/HealthRecord/SearchPatientHistory?patientId='
-                        + id;
-                });
+                    $("#historyContainer").empty();
+
+                    return;
+                }
+
+                if (!id || id === "0") {
+
+                    $("#patientError")
+                        .text("No patient available.");
+                    $("#historyContainer").empty();
+
+                    return;
+                }
+
+                $("#patientError").text("");
+
+                window.location =
+                    '/HealthRecord/SearchPatientHistory?patientId='
+                    + id;
+            });
         });
 
-    </script>
+        </script>
 
-}
+    }

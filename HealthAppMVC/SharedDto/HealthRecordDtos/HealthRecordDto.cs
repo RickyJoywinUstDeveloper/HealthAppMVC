@@ -17,5 +17,10 @@ namespace SharedDto.HealthRecordDtos
         public string Prescription { get; set; }
 
         public string Notes { get; set; }
+
+        public int AppointmentId { get; set; }
+
+        public int PatientId { get; set; }
+
     }
 }

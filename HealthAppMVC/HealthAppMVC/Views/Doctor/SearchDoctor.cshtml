@@ -1,35 +1,144 @@
-﻿@{
-    ViewBag.Title = "Search Doctor";
+﻿@model IEnumerable<SharedDto.DoctorDtos.DoctorDto>
+
+@{
+    ViewBag.Title = "Edit Doctor";
 }
 
-<h2>Search Doctor</h2>
+<style>
 
-<div class="form-group">
+    .doctor-card {
+        border: none;
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+        transition: transform 0.2s ease;
+    }
 
-    <label>Doctor Name</label>
+        .doctor-card:hover {
+            transform: translateY(-3px);
+        }
+</style>
 
-    <input type="text"
-           id="doctorName"
-           class="form-control" />
+<div class="container mt-5">
 
-    <input type="hidden"
-           id="doctorId" />
+    <div class="card shadow">
+
+        <div class="card-header bg-warning">
+
+            <h3>
+                ✏️ Edit Doctor Details
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Search Doctor
+                </label>
+
+                <input type="text"
+                       id="doctorSearch"
+                       class="form-control"
+                       placeholder="Type doctor name..." />
+
+            </div>
+
+            <div class="row"
+                 id="doctorContainer">
+
+                @foreach (var doctor in Model)
+                {
+                    <div class="col-md-6 mb-3 doctor-wrapper">
+
+                        <div class="card doctor-card h-100">
+
+                            <div class="card-body">
+
+                                <h5 class="doctor-name">
+                                    👨‍⚕️ @doctor.FullName
+                                </h5>
+
+                                <p>
+                                    <strong>
+                                        Specialisation:
+                                    </strong>
+                                    @doctor.Specialisation
+                                </p>
+
+                                <p>
+                                    <strong>
+                                        Phone:
+                                    </strong>
+                                    @doctor.DoctorPhoneNo
+                                </p>
+
+                                <p>
+                                    <strong>
+                                        Email:
+                                    </strong>
+                                    @doctor.DoctorEmail
+                                </p>
+
+                                <p>
+                                    <strong>
+                                        Experience:
+                                    </strong>
+                                    @doctor.YearsOfExperience Years
+                                </p>
+
+                                <p>
+                                    <strong>
+                                        Consultation Fee:
+                                    </strong>
+                                    ₹@doctor.ConsultationFee
+                                </p>
+
+                                <a href="@Url.Action(
+                                            "Edit",
+                                            "Doctor",
+                                            new
+                                            {
+                                                id =
+                                                doctor.DoctorId
+                                            })"
+                                   class="btn btn-primary">
+
+                                    Edit Doctor
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+            <div id="noResults"
+                 class="alert alert-info mt-3"
+                 style="display:none;">
+
+                No doctors found.
+
+            </div>
+
+            <a href="@Url.Action(
+                        "DoctorServices",
+                        "Home")"
+               class="btn btn-secondary mt-3">
+
+                Back
+
+            </a>
+
+        </div>
+
+    </div>
 
 </div>
-
-<br />
-
-<button id="btnEdit"
-        class="btn btn-primary">
-    Edit Doctor
-</button>
-
-@Html.ActionLink(
-    "Back",
-    "DoctorServices",
-    "Home",
-    null,
-    new { @class = "btn btn-secondary" })
 
 @section Scripts{
 
@@ -37,41 +146,46 @@
 
         $(function () {
 
-            $("#doctorName").autocomplete({
+            $("#doctorSearch")
+                .on("keyup", function () {
 
-                source:
-                    '@Url.Action(
-                        "SearchDoctorNames",
-                        "Doctor")',
+                    var searchText =
+                        $(this)
+                            .val()
+                            .toLowerCase();
 
-                minLength: 1,
+                    var visibleCount = 0;
 
-                select: function (
-                    event,
-                    ui) {
+                    $(".doctor-wrapper")
+                        .each(function () {
 
-                    $("#doctorId")
-                        .val(ui.item.value);
-                }
-            });
+                            var doctorName =
+                                $(this)
+                                    .find(".doctor-name")
+                                    .text()
+                                    .toLowerCase();
 
-            $("#btnEdit").click(function () {
+                            if (doctorName
+                                .indexOf(searchText) > -1) {
+                                $(this).show();
 
-                var id =
-                    $("#doctorId").val();
+                                visibleCount++;
+                            }
+                            else {
+                                $(this).hide();
+                            }
 
-                if (id) {
+                        });
 
-                    window.location =
-                        '/Doctor/EditDoctorByName?id='
-                        + id;
-                }
-                else {
+                    if (visibleCount === 0) {
+                        $("#noResults").show();
+                    }
+                    else {
+                        $("#noResults").hide();
+                    }
 
-                    alert(
-                        "Please select a doctor.");
-                }
-            });
+                });
+
         });
 
     </script>

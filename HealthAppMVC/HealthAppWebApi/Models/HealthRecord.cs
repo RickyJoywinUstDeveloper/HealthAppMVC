@@ -12,7 +12,7 @@ namespace HealthAppWebApi.Models
         [Required]
         public int AppointmentId { get; set; }
 
-        public int PatientId { get; set; }
+        
 
         [Required]
         public DateTime VisitDate { get; set; }

@@ -73,8 +73,7 @@
 
                             <p>
                                 <strong>Date:</strong>
-                                @item.ScheduledDate
-                                .ToString("dd-MMM-yyyy")
+                                @item.ScheduledDate.ToString("dd-MMM-yyyy")
                             </p>
 
                             <p>
@@ -146,28 +145,38 @@
 
     <script>
 
-        $(function () {
+       $(function () {
 
-            $("#patientSearch").autocomplete({
+    $("#patientSearch").autocomplete({
 
-                source: function (
-                    request,
-                    response) {
+        source: function (
+            request,
+            response) {
 
-                    $.getJSON(
-                        '@Url.Action(
-                            "SearchPatientNames",
-                            "Appointment")',
+            $.getJSON(
+                '@Url.Action(
+                    "SearchPatientNames",
+                    "Appointment")',
 
-                        {
-                            term: request.term
-                        },
+                {
+                    term: request.term
+                },
 
-                        response);
-                }
-            });
+                response);
+        },
 
-        });
+        select: function (
+            event,
+            ui) {
+
+            $("#patientSearch")
+                .val(ui.item.label);
+
+            return false;
+        }
+    });
+
+});
 
     </script>
 

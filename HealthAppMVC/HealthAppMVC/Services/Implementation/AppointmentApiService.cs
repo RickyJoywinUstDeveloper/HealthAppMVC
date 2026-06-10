@@ -76,7 +76,14 @@ namespace HealthAppMVC.Services.Implementation
                     "appointments",
                     content);
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                string error =
+                    await response.Content
+                        .ReadAsStringAsync();
+
+                throw new Exception(error);
+            }
         }
 
         public async Task ConfirmAppointmentAsync(
