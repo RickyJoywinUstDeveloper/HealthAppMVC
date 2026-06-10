@@ -24,35 +24,55 @@
     Edit Doctor
 </button>
 
+@Html.ActionLink(
+    "Back",
+    "DoctorServices",
+    "Home",
+    null,
+    new { @class = "btn btn-secondary" })
+
 @section Scripts{
 
     <script>
 
-$(function () {
+        $(function () {
 
-    $("#doctorName").autocomplete({
+            $("#doctorName").autocomplete({
 
-        source: '@Url.Action("SearchDoctorNames","Doctor")',
+                source:
+                    '@Url.Action(
+                        "SearchDoctorNames",
+                        "Doctor")',
 
-        minLength: 1,
+                minLength: 1,
 
-        select: function (event, ui) {
+                select: function (
+                    event,
+                    ui) {
 
-            $("#doctorId").val(ui.item.value);
-        }
-    });
+                    $("#doctorId")
+                        .val(ui.item.value);
+                }
+            });
 
-    $("#btnEdit").click(function () {
+            $("#btnEdit").click(function () {
 
-        var id = $("#doctorId").val();
+                var id =
+                    $("#doctorId").val();
 
-        if (id) {
+                if (id) {
 
-            window.location =
-                '/Doctor/EditDoctorByName?id=' + id;
-        }
-    });
-});
+                    window.location =
+                        '/Doctor/EditDoctorByName?id='
+                        + id;
+                }
+                else {
+
+                    alert(
+                        "Please select a doctor.");
+                }
+            });
+        });
 
     </script>
 

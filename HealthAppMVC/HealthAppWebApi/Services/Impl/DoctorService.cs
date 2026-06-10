@@ -1,11 +1,11 @@
-﻿using HealthAppWebApi.DTOs;
-using HealthAppWebApi.Models;
+﻿using HealthAppWebApi.Models;
 using HealthAppWebApi.Repositories.Interface;
 using HealthAppWebApi.Services.Interface;
+using SharedDto.DoctorDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Services.Impl
 {
@@ -13,90 +13,139 @@ namespace HealthAppWebApi.Services.Impl
     {
         private readonly IDoctorRepository _repo;
 
-        public DoctorService(IDoctorRepository repo)
+        public DoctorService(
+            IDoctorRepository repo)
         {
             _repo = repo;
         }
 
-        public List<DoctorDto> GetAllDoctors()
+        public async Task<List<DoctorDto>>
+            GetAllDoctorsAsync()
         {
-            return _repo.GetAll()
+            var doctors =
+                await _repo.GetAllAsync();
+
+            return doctors
                 .Select(d => new DoctorDto
                 {
-                    DoctorId = d.DoctorId,
-                    FullName = d.FullName,
+                    DoctorId =
+                        d.DoctorId,
+
+                    FullName =
+                        d.FullName,
+
                     Specialisation =
                         d.Specialisation.ToString(),
+
                     ConsultationFee =
                         d.ConsultationFee,
-                    IsActive = d.IsActive,
-                    DoctorPhoneNo = d.DoctorPhoneNo
+
+                    IsActive =
+                        d.IsActive,
+
+                    DoctorPhoneNo =
+                        d.DoctorPhoneNo,
+
+                    DoctorEmail =
+                        d.DoctorEmail
                 })
                 .ToList();
         }
 
-        public DoctorDto GetDoctorById(int id)
+        public async Task<DoctorDto>
+            GetDoctorByIdAsync(int id)
         {
-            var doctor = _repo.GetById(id);
+            var doctor =
+                await _repo.GetByIdAsync(id);
 
             if (doctor == null)
+            {
                 return null;
+            }
 
             return new DoctorDto
             {
-                DoctorId = doctor.DoctorId,
-                FullName = doctor.FullName,
+                DoctorId =
+                    doctor.DoctorId,
+
+                FullName =
+                    doctor.FullName,
+
                 Specialisation =
-                    doctor.Specialisation.ToString(),
+                    doctor.Specialisation
+                        .ToString(),
+
                 ConsultationFee =
                     doctor.ConsultationFee,
-                IsActive = doctor.IsActive,
-                DoctorPhoneNo= doctor.DoctorPhoneNo
+
+                IsActive =
+                    doctor.IsActive,
+
+                DoctorPhoneNo =
+                    doctor.DoctorPhoneNo,
+
+                DoctorEmail =
+                    doctor.DoctorEmail
             };
         }
 
-        public void AddDoctor(CreateDoctorDto dto)
+        public async Task AddDoctorAsync(
+            CreateDoctorDto dto)
         {
-
             if (!Enum.TryParse(
-            dto.Specialisation,
-            true,
-            out SpecialisationType specialisation))
+                dto.Specialisation,
+                true,
+                out SpecialisationType specialisation))
             {
                 throw new Exception(
                     "Invalid Specialisation.");
             }
 
-            Doctor doctor = new Doctor
+            if (dto.ConsultationFee <= 0)
             {
-                FullName = dto.FullName,
+                throw new Exception(
+                    "Consultation fee must be greater than zero.");
+            }
 
-                Specialisation = specialisation,
-                    
-                YearsOfExperience =
-                    dto.YearsOfExperience,
+            if (dto.YearsOfExperience < 0)
+            {
+                throw new Exception(
+                    "Years of experience cannot be negative.");
+            }
 
-                ConsultationFee =
-                    dto.ConsultationFee,
+            Doctor doctor =
+                new Doctor
+                {
+                    FullName =
+                        dto.FullName,
 
-                DoctorEmail = dto.DoctorEmail,
+                    Specialisation =
+                        specialisation,
 
-                DoctorPhoneNo = dto.DoctorPhoneNo,
+                    YearsOfExperience =
+                        dto.YearsOfExperience,
 
-                IsActive = true
-            };
+                    ConsultationFee =
+                        dto.ConsultationFee,
 
+                    DoctorEmail =
+                        dto.DoctorEmail,
 
+                    DoctorPhoneNo =
+                        dto.DoctorPhoneNo,
 
-            _repo.Add(doctor);
+                    IsActive = true
+                };
+
+            await _repo.AddAsync(doctor);
         }
 
-        public void UpdateDoctor(
+        public async Task UpdateDoctorAsync(
             int id,
             CreateDoctorDto dto)
         {
             Doctor doctor =
-                _repo.GetById(id);
+                await _repo.GetByIdAsync(id);
 
             if (doctor == null)
             {
@@ -105,19 +154,31 @@ namespace HealthAppWebApi.Services.Impl
             }
 
             if (!Enum.TryParse(
-            dto.Specialisation,
-            true,
-            out SpecialisationType specialisation))
+                dto.Specialisation,
+                true,
+                out SpecialisationType specialisation))
             {
                 throw new Exception(
                     "Invalid Specialisation.");
             }
 
+            if (dto.ConsultationFee <= 0)
+            {
+                throw new Exception(
+                    "Consultation fee must be greater than zero.");
+            }
+
+            if (dto.YearsOfExperience < 0)
+            {
+                throw new Exception(
+                    "Years of experience cannot be negative.");
+            }
 
             doctor.FullName =
                 dto.FullName;
 
-            doctor.Specialisation = specialisation;
+            doctor.Specialisation =
+                specialisation;
 
             doctor.YearsOfExperience =
                 dto.YearsOfExperience;
@@ -125,24 +186,37 @@ namespace HealthAppWebApi.Services.Impl
             doctor.ConsultationFee =
                 dto.ConsultationFee;
 
-            doctor.DoctorEmail = dto.DoctorEmail;
+            doctor.DoctorEmail =
+                dto.DoctorEmail;
 
-            doctor.DoctorPhoneNo = dto.DoctorPhoneNo;
+            doctor.DoctorPhoneNo =
+                dto.DoctorPhoneNo;
 
-            _repo.Update(doctor);
+            await _repo.UpdateAsync(
+                doctor);
         }
 
-        public void ChangeStatus(
+        public async Task ChangeStatusAsync(
             int id,
             bool isActive)
         {
-            _repo.ChangeStatus(
+            Doctor doctor =
+                await _repo.GetByIdAsync(id);
+
+            if (doctor == null)
+            {
+                throw new Exception(
+                    "Doctor not found.");
+            }
+
+            await _repo.ChangeStatusAsync(
                 id,
                 isActive);
         }
 
-        public List<DoctorDto> GetDoctorsBySpecialisation(
-    string specialisation)
+        public async Task<List<DoctorDto>>
+            GetDoctorsBySpecialisationAsync(
+                string specialisation)
         {
             if (!Enum.TryParse(
                     specialisation,
@@ -153,19 +227,71 @@ namespace HealthAppWebApi.Services.Impl
                     "Invalid Specialisation.");
             }
 
-            return _repo
-                .GetBySpecialisation(spec)
+            var doctors =
+                await _repo
+                    .GetBySpecialisationAsync(
+                        spec);
+
+            return doctors
                 .Select(d => new DoctorDto
                 {
-                    DoctorId = d.DoctorId,
-                    FullName = d.FullName,
+                    DoctorId =
+                        d.DoctorId,
+
+                    FullName =
+                        d.FullName,
+
                     Specialisation =
-                        d.Specialisation.ToString(),
+                        d.Specialisation
+                            .ToString(),
+
                     ConsultationFee =
                         d.ConsultationFee,
-                    IsActive = d.IsActive,
+
+                    IsActive =
+                        d.IsActive,
+
                     DoctorPhoneNo =
-                        d.DoctorPhoneNo
+                        d.DoctorPhoneNo,
+
+                    DoctorEmail =
+                        d.DoctorEmail
+                })
+                .ToList();
+        }
+
+        public async Task<List<DoctorDto>>
+            SearchByNameAsync(
+                string name)
+        {
+            var doctors =
+                await _repo
+                    .SearchByNameAsync(name);
+
+            return doctors
+                .Select(d => new DoctorDto
+                {
+                    DoctorId =
+                        d.DoctorId,
+
+                    FullName =
+                        d.FullName,
+
+                    Specialisation =
+                        d.Specialisation
+                            .ToString(),
+
+                    ConsultationFee =
+                        d.ConsultationFee,
+
+                    IsActive =
+                        d.IsActive,
+
+                    DoctorPhoneNo =
+                        d.DoctorPhoneNo,
+
+                    DoctorEmail =
+                        d.DoctorEmail
                 })
                 .ToList();
         }

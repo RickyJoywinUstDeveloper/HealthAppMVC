@@ -1,18 +1,22 @@
-﻿using HealthAppWebApi.DTOs;
-using System;
+﻿using SharedDto.HealthRecordDtos;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Services.Interface
 {
     public interface IHealthRecordService
     {
-        List<HealthRecordDto> GetAll();
+        Task<List<HealthRecordDto>>
+            GetAllAsync();
 
-        HealthRecordDto GetById(int id);
+        Task<HealthRecordDto>
+            GetByIdAsync(int id);
 
-        void Add(CreateHealthRecordDto dto);
+        Task<List<HealthRecordDto>>
+            GetPatientHistoryAsync(
+                int patientId);
+
+        Task AddAsync(
+            CreateHealthRecordDto dto);
     }
 }

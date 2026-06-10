@@ -1,18 +1,17 @@
-﻿using HealthAppWebApi.DTOs;
-using HealthAppWebApi.Repositories.Interface;
-using HealthAppWebApi.Services.Interface;
+﻿using HealthAppWebApi.Services.Interface;
+using SharedDto.HealthRecordDtos;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace HealthAppWebApi.Controllers
 {
     [RoutePrefix("api/healthrecords")]
-    public class HealthRecordsController : ApiController
+    public class HealthRecordsController
+        : ApiController
     {
-        private readonly IHealthRecordService _service;
+        private readonly
+            IHealthRecordService _service;
 
         public HealthRecordsController(
             IHealthRecordService service)
@@ -22,33 +21,72 @@ namespace HealthAppWebApi.Controllers
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetAll()
+        public async Task<IHttpActionResult>
+            GetAll()
         {
-            return Ok(_service.GetAll());
+            var records =
+                await _service.GetAllAsync();
+
+            return Ok(records);
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public IHttpActionResult GetById(int id)
+        public async Task<IHttpActionResult>
+            GetById(int id)
         {
-            return Ok(_service.GetById(id));
+            try
+            {
+                var record =
+                    await _service
+                        .GetByIdAsync(id);
+
+                return Ok(record);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("patient/{patientId:int}")]
+        public async Task<IHttpActionResult>
+            GetPatientHistory(
+                int patientId)
+        {
+            var records =
+                await _service
+                    .GetPatientHistoryAsync(
+                        patientId);
+
+            return Ok(records);
         }
 
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Add(
-            CreateHealthRecordDto dto)
+        public async Task<IHttpActionResult>
+            Add(
+                CreateHealthRecordDto dto)
         {
             try
             {
-                _service.Add(dto);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(
+                        ModelState);
+                }
+
+                await _service.AddAsync(dto);
 
                 return Ok(
                     "Health Record added successfully. Appointment completed.");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(
+                    ex.Message);
             }
         }
     }

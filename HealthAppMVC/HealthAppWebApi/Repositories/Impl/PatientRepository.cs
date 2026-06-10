@@ -2,42 +2,81 @@
 using HealthAppWebApi.Models;
 using HealthAppWebApi.Repositories.Interface;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Repositories.Impl
 {
-    public class PatientRepository : IPatientRepository
+    public class PatientRepository
+        : IPatientRepository
     {
         private readonly AppDbContext _context;
 
-
-        public PatientRepository(AppDbContext context)
+        public PatientRepository(
+            AppDbContext context)
         {
             _context = context;
         }
 
-        public List<Patient> GetAll()
+        public async Task<List<Patient>>
+            GetAllAsync()
         {
-            return _context.Patients.ToList();
+            return await _context.Patients
+                .AsNoTracking()
+                .OrderBy(p => p.FullName)
+                .ToListAsync();
         }
 
-        public Patient GetById(int id)
+        public async Task<Patient>
+            GetByIdAsync(int id)
         {
-            return _context.Patients.Find(id);
+            return await _context.Patients
+                .FindAsync(id);
         }
 
-        public void Add(Patient patient)
+        public async Task AddAsync(
+            Patient patient)
         {
             _context.Patients.Add(patient);
-            _context.SaveChanges();
+
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(Patient patient)
+        public async Task UpdateAsync(
+            Patient patient)
         {
             _context.Entry(patient).State =
-                System.Data.Entity.EntityState.Modified;
+                EntityState.Modified;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool>
+            EmailExistsAsync(string email)
+        {
+            return await _context.Patients
+                .AnyAsync(p =>
+                    p.Email == email);
+        }
+
+        public async Task<int>
+            GetAppointmentCountAsync(
+                int patientId)
+        {
+            return await _context.Appointments
+                .CountAsync(a =>
+                    a.PatientId == patientId);
+        }
+
+        public async Task<List<Patient>>
+            SearchByNameAsync(string name)
+        {
+            return await _context.Patients
+                .Where(p =>
+                    p.FullName.Contains(name))
+                .OrderBy(p => p.FullName)
+                .ToListAsync();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HealthAppMVC.Models.HealthRecord>
+﻿@model IEnumerable<SharedDto.HealthRecordDtos.HealthRecordDto>
 
 @{
     ViewBag.Title =
@@ -38,7 +38,6 @@
     Back
 </a>
 
-
 @if (Model != null && Model.Any())
 {
     <div class="row mt-4">
@@ -56,23 +55,36 @@
                         </h5>
 
                         <p>
-                            <strong>Specialisation:</strong>
-                            @item.Specialisation
+                            <strong>
+                                Visit Date:
+                            </strong>
+
+                            @item.VisitDate
+                            .ToString("dd-MM-yyyy")
                         </p>
 
                         <p>
-                            <strong>Visit Date:</strong>
-                            @item.VisitDate.ToShortDateString()
-                        </p>
+                            <strong>
+                                Diagnosis:
+                            </strong>
 
-                        <p>
-                            <strong>Diagnosis:</strong>
                             @item.Diagnosis
                         </p>
 
                         <p>
-                            <strong>Prescription:</strong>
+                            <strong>
+                                Prescription:
+                            </strong>
+
                             @item.Prescription
+                        </p>
+
+                        <p>
+                            <strong>
+                                Notes:
+                            </strong>
+
+                            @item.Notes
                         </p>
 
                     </div>
@@ -89,40 +101,47 @@
 
     <script>
 
-$(function () {
+        $(function () {
 
-    $("#patientName")
-        .autocomplete({
+            $("#patientName")
+                .autocomplete({
 
-        source:
-        '@Url.Action(
-        "SearchPatientNames",
-        "HealthRecord")',
+                    source:
+                        '@Url.Action(
+                            "SearchPatientNames",
+                            "HealthRecord")',
 
-        minLength: 1,
+                    minLength: 1,
 
-        select: function (
-            event,
-            ui)
-        {
-            $("#patientId")
-                .val(ui.item.value);
-        }
-    });
+                    select: function (
+                        event,
+                        ui) {
 
-    $("#btnHistory").click(function () {
+                        $("#patientId")
+                            .val(ui.item.value);
+                    }
+                });
 
-        var id = $("#patientId").val();
+            $("#btnHistory")
+                .click(function () {
 
-        if (!id || id === "0") {
-            alert("Please select a patient from suggestions");
-            return;
-        }
+                    var id =
+                        $("#patientId")
+                            .val();
 
-        window.location =
-            '/HealthRecord/SearchPatientHistory?patientId=' + id;
-    });
-    });
+                    if (!id || id === "0") {
+
+                        alert(
+                            "Please select a patient from suggestions");
+
+                        return;
+                    }
+
+                    window.location =
+                        '/HealthRecord/SearchPatientHistory?patientId='
+                        + id;
+                });
+        });
 
     </script>
 

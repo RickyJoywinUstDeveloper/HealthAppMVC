@@ -1,8 +1,7 @@
-﻿using HealthAppWebApi.DTOs;
-using HealthAppWebApi.Repositories.Impl;
-using HealthAppWebApi.Services.Impl;
-using HealthAppWebApi.Services.Interface;
+﻿using HealthAppWebApi.Services.Interface;
+using SharedDto.PatientDtos;
 using System;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace HealthAppWebApi.Controllers
@@ -20,43 +19,113 @@ namespace HealthAppWebApi.Controllers
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetAll()
+        public async Task<IHttpActionResult>
+            GetAll()
         {
-            return Ok(_service.GetAllPatients());
+            var patients =
+                await _service
+                    .GetAllPatientsAsync();
+
+            return Ok(patients);
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public IHttpActionResult Get(int id)
+        [Route("{id:int}")]
+        public async Task<IHttpActionResult>
+            Get(int id)
         {
-            return Ok(_service.GetPatientById(id));
+            var patient =
+                await _service
+                    .GetPatientByIdAsync(id);
+
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(patient);
         }
 
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Create(CreatePatientDto dto)
+        public async Task<IHttpActionResult>
+            Create(CreatePatientDto dto)
         {
             try
             {
-                _service.RegisterPatient(dto);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(
+                        ModelState);
+                }
 
-                return Ok("Patient added successfully.");
+                await _service
+                    .RegisterPatientAsync(dto);
+
+                return Ok(
+                    "Patient added successfully.");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(
+                    ex.Message);
             }
         }
 
         [HttpPut]
-        [Route("{id}")]
-        public IHttpActionResult Update(
-            int id,
-            CreatePatientDto dto)
+        [Route("{id:int}")]
+        public async Task<IHttpActionResult>
+            Update(
+                int id,
+                CreatePatientDto dto)
         {
-            _service.UpdatePatient(id, dto);
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(
+                        ModelState);
+                }
 
-            return Ok("Patient updated successfully");
+                await _service
+                    .UpdatePatientAsync(
+                        id,
+                        dto);
+
+                return Ok(
+                    "Patient updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("search")]
+        public async Task<IHttpActionResult>
+            SearchByName(string name)
+        {
+            var patients =
+                await _service
+                    .SearchByNameAsync(name);
+
+            return Ok(patients);
+        }
+
+        [HttpGet]
+        [Route("{id:int}/appointmentcount")]
+        public async Task<IHttpActionResult>
+            GetAppointmentCount(
+                int id)
+        {
+            int count =
+                await _service
+                    .GetAppointmentCountAsync(
+                        id);
+
+            return Ok(count);
         }
     }
 }

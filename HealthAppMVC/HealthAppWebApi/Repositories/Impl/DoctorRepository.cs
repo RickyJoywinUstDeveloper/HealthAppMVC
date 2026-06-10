@@ -1,64 +1,93 @@
 ﻿using HealthAppWebApi.App_Data;
 using HealthAppWebApi.Models;
 using HealthAppWebApi.Repositories.Interface;
-using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Repositories.Impl
 {
-    public class DoctorRepository : IDoctorRepository
+    public class DoctorRepository
+        : IDoctorRepository
     {
         private readonly AppDbContext _context;
 
-        public DoctorRepository(AppDbContext context)
+        public DoctorRepository(
+            AppDbContext context)
         {
             _context = context;
         }
 
-        public List<Doctor> GetAll()
+        public async Task<List<Doctor>>
+            GetAllAsync()
         {
-            return _context.Doctors.ToList();
+            return await _context.Doctors
+                .OrderBy(d => d.FullName)
+                .ToListAsync();
         }
 
-        public Doctor GetById(int id)
+        public async Task<Doctor>
+            GetByIdAsync(int id)
         {
-            return _context.Doctors.Find(id);
+            return await _context.Doctors
+                .FindAsync(id);
         }
 
-        public void Add(Doctor doctor)
+        public async Task AddAsync(
+            Doctor doctor)
         {
             _context.Doctors.Add(doctor);
-            _context.SaveChanges();
+
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(Doctor doctor)
+        public async Task UpdateAsync(
+            Doctor doctor)
         {
             _context.Entry(doctor).State =
-                System.Data.Entity.EntityState.Modified;
+                EntityState.Modified;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void ChangeStatus(int id, bool isActive)
+        public async Task ChangeStatusAsync(
+            int id,
+            bool isActive)
         {
-            var doctor = _context.Doctors.Find(id);
+            Doctor doctor =
+                await _context.Doctors
+                .FindAsync(id);
 
             if (doctor == null)
                 return;
 
             doctor.IsActive = isActive;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public List<Doctor> GetBySpecialisation(
-    SpecialisationType specialisation)
+        public async Task<List<Doctor>>
+            GetBySpecialisationAsync(
+                SpecialisationType specialisation)
         {
-            return _context.Doctors
-                .Where(d => d.Specialisation == specialisation)
-                .ToList();
+            return await _context.Doctors
+                .Where(d =>
+                    d.Specialisation ==
+                    specialisation)
+                .OrderBy(d => d.FullName)
+                .ToListAsync();
+        }
+
+        public async Task<List<Doctor>>
+            SearchByNameAsync(
+                string name)
+        {
+            return await _context.Doctors
+                .Where(d =>
+                    d.FullName.Contains(name))
+                .OrderBy(d => d.FullName)
+                .ToListAsync();
         }
     }
 }

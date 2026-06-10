@@ -1,59 +1,66 @@
-﻿using HealthAppMVC.Models;
+﻿
 using HealthAppMVC.Services.Interface;
+using SharedDto.DoctorDtos;
+using SharedDto.Enums;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace HealthAppMVC.Controllers
 {
-    public class DoctorController : Controller
+    public class DoctorController
+        : Controller
     {
-        private readonly IDoctorService _doctorService;
+        private readonly
+            IDoctorApiService
+            _doctorService;
 
         public DoctorController(
-            IDoctorService doctorService)
+            IDoctorApiService doctorService)
         {
-            _doctorService = doctorService;
+            _doctorService =
+                doctorService;
         }
 
         // GET: Doctor
-        public ActionResult Index(
-            string specialisation = "")
+        public async Task<ActionResult>
+            Index(string specialisation = "")
         {
             var doctors =
-                _doctorService.GetAllDoctors();
+                await _doctorService
+                    .GetAllDoctorsAsync();
 
-            if (!string.IsNullOrEmpty(
+            if (!string.IsNullOrWhiteSpace(
                 specialisation))
             {
-                SpecialisationType sp;
-
-                if (Enum.TryParse(
-                    specialisation,
-                    out sp))
-                {
-                    doctors =
-                        _doctorService
-                        .SearchBySpecialisation(sp);
-                }
+                doctors =
+                    await _doctorService
+                        .GetDoctorsBySpecialisationAsync(
+                            specialisation);
             }
 
             ViewBag.Specialisations =
-                Enum.GetValues(
+                Enum.GetNames(
                     typeof(SpecialisationType));
 
             return View(doctors);
         }
 
         // GET: Doctor/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult>
+            Details(int id)
         {
             try
             {
-                Doctor doctor =
-                    _doctorService
-                    .GetDoctorById(id);
+                var doctor =
+                    await _doctorService
+                        .GetDoctorByIdAsync(id);
+
+                if (doctor == null)
+                {
+                    return HttpNotFound();
+                }
 
                 return View(doctor);
             }
@@ -70,27 +77,39 @@ namespace HealthAppMVC.Controllers
         // GET: Doctor/Create
         public ActionResult Create()
         {
+            ViewBag.Specialisations =
+                Enum.GetNames(
+                    typeof(SpecialisationType));
+
             return View();
         }
 
         // POST: Doctor/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(
-            Doctor doctor)
+        public async Task<ActionResult>
+            Create(CreateDoctorDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(doctor);
-            }
-
             try
             {
-                _doctorService
-                    .AddDoctor(doctor);
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.Specialisations =
+                        Enum.GetNames(
+                            typeof(SpecialisationType));
 
-                TempData["Success"] = "Doctor Registered Successfully";
-                return RedirectToAction("DoctorServices", "Home");
+                    return View(dto);
+                }
+
+                await _doctorService
+                    .AddDoctorAsync(dto);
+
+                TempData["Success"] =
+                    "Doctor Registered Successfully";
+
+                return RedirectToAction(
+                    "DoctorServices",
+                    "Home");
             }
             catch (Exception ex)
             {
@@ -98,20 +117,56 @@ namespace HealthAppMVC.Controllers
                     "",
                     ex.Message);
 
-                return View(doctor);
+                ViewBag.Specialisations =
+                    Enum.GetNames(
+                        typeof(SpecialisationType));
+
+                return View(dto);
             }
         }
 
         // GET: Doctor/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult>
+            Edit(int id)
         {
             try
             {
-                Doctor doctor =
-                    _doctorService
-                    .GetDoctorById(id);
+                var doctor =
+                    await _doctorService
+                        .GetDoctorByIdAsync(id);
 
-                return View(doctor);
+                if (doctor == null)
+                {
+                    return HttpNotFound();
+                }
+
+                CreateDoctorDto dto =
+                    new CreateDoctorDto
+                    {
+                        FullName =
+                            doctor.FullName,
+
+                        Specialisation =
+                            doctor.Specialisation,
+
+                        YearsOfExperience =
+                            doctor.YearsOfExperience,
+
+                        ConsultationFee =
+                            doctor.ConsultationFee,
+
+                        DoctorEmail =
+                            doctor.DoctorEmail,
+
+                        DoctorPhoneNo =
+                            doctor.DoctorPhoneNo
+                    };
+
+                ViewBag.Specialisations =
+                    Enum.GetNames(
+                        typeof(SpecialisationType));
+
+                return View(dto);
             }
             catch (Exception ex)
             {
@@ -119,27 +174,41 @@ namespace HealthAppMVC.Controllers
                     ex.Message;
 
                 return RedirectToAction(
-                    "DoctorServices", "Home");
+                    "DoctorServices",
+                    "Home");
             }
         }
 
         // POST: Doctor/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(
-            Doctor doctor)
+        public async Task<ActionResult>
+            Edit(
+                int id,
+                CreateDoctorDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(doctor);
-            }
-
             try
             {
-                _doctorService
-                    .UpdateDoctor(doctor);
-                TempData["Success"] = "Doctor Details Updated Successfully";
-                return RedirectToAction("DoctorServices", "Home");
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.Specialisations =
+                        Enum.GetNames(
+                            typeof(SpecialisationType));
+
+                    return View(dto);
+                }
+
+                await _doctorService
+                    .UpdateDoctorAsync(
+                        id,
+                        dto);
+
+                TempData["Success"] =
+                    "Doctor Details Updated Successfully";
+
+                return RedirectToAction(
+                    "DoctorServices",
+                    "Home");
             }
             catch (Exception ex)
             {
@@ -147,25 +216,34 @@ namespace HealthAppMVC.Controllers
                     "",
                     ex.Message);
 
-                return View(doctor);
+                ViewBag.Specialisations =
+                    Enum.GetNames(
+                        typeof(SpecialisationType));
+
+                return View(dto);
             }
         }
 
         // GET: Doctor/ChangeStatus/5
-        public ActionResult ChangeStatus(
-            int id)
+        public async Task<ActionResult>
+            ChangeStatus(int id)
         {
             try
             {
-                Doctor doctor =
-                    _doctorService
-                    .GetDoctorById(id);
+                var doctor =
+                    await _doctorService
+                        .GetDoctorByIdAsync(id);
+
+                if (doctor == null)
+                {
+                    return HttpNotFound();
+                }
 
                 bool newStatus =
                     !doctor.IsActive;
 
-                _doctorService
-                    .ChangeDoctorStatus(
+                await _doctorService
+                    .ChangeStatusAsync(
                         id,
                         newStatus);
 
@@ -190,53 +268,67 @@ namespace HealthAppMVC.Controllers
             return View();
         }
 
-        public JsonResult SearchDoctorNames(string term)
+        public async Task<JsonResult>
+            SearchDoctorNames(
+                string term)
         {
-            var doctors = _doctorService
-                            .SearchByName(term)
-                            .Select(d => new
-                            {
-                                label = d.FullName,
-                                value = d.DoctorId
-                            })
-                            .ToList();
+            var doctors =
+                await _doctorService
+                    .SearchByNameAsync(term);
 
-            return Json(doctors,
+            var result =
+                doctors.Select(d => new
+                {
+                    label = d.FullName,
+                    value = d.DoctorId
+                }).ToList();
+
+            return Json(
+                result,
                 JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult EditDoctorByName(int id)
+        public ActionResult
+            EditDoctorByName(int id)
         {
-            return RedirectToAction("Edit",
-                new { id = id });
+            return RedirectToAction(
+                "Edit",
+                new { id });
         }
 
-        public ActionResult DoctorSearch(
-    string doctorName,
-    string specialisation)
+        public async Task<ActionResult>
+            DoctorSearch(
+                string doctorName,
+                string specialisation)
         {
-            IEnumerable<Doctor> doctors =
-                _doctorService.GetAllDoctors();
+            var doctors =
+                await _doctorService
+                    .GetAllDoctorsAsync();
 
-            if (!string.IsNullOrWhiteSpace(doctorName))
+            if (!string.IsNullOrWhiteSpace(
+                doctorName))
             {
-                doctors = doctors.Where(d =>
-                    d.FullName.ToLower()
-                     .Contains(doctorName.ToLower()));
+                doctors =
+                    doctors.Where(d =>
+                        d.FullName
+                        .ToLower()
+                        .Contains(
+                            doctorName
+                            .ToLower()))
+                    .ToList();
             }
 
-            if (!string.IsNullOrWhiteSpace(specialisation))
+            if (!string.IsNullOrWhiteSpace(
+                specialisation))
             {
-                SpecialisationType sp;
-
-                if (Enum.TryParse(
-                        specialisation,
-                        true,
-                        out sp))
-                {
-                    doctors = doctors.Where(
-                        d => d.Specialisation == sp);
-                }
+                doctors =
+                    doctors.Where(d =>
+                        d.Specialisation
+                        .Equals(
+                            specialisation,
+                            StringComparison
+                                .OrdinalIgnoreCase))
+                    .ToList();
             }
 
             return View(doctors);

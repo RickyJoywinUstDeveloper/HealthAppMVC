@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HealthAppMVC.Models.Patient>
+﻿@model IEnumerable<SharedDto.PatientDtos.PatientDto>
 
 @{
     ViewBag.Title = "Patients";
@@ -7,48 +7,125 @@
 <h2>Patients</h2>
 
 <p>
-    @Html.ActionLink("Register Patient", "Create", null,
+    @Html.ActionLink(
+        "Register Patient",
+        "Create",
+        null,
         new { @class = "btn btn-primary" })
 </p>
 
 <table class="table table-bordered table-striped">
+
     <thead>
+
         <tr>
-            <th>Patient Id</th>
-            <th>Name</th>
-            <th>DOB</th>
-            <th>Gender</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Insurance</th>
-            <th>Actions</th>
+
+            <th>
+                Patient Id
+            </th>
+
+            <th>
+                Name
+            </th>
+
+            <th>
+                DOB
+            </th>
+
+            <th>
+                Gender
+            </th>
+
+            <th>
+                Phone
+            </th>
+
+            <th>
+                Email
+            </th>
+
+            <th>
+                Insurance
+            </th>
+
+            <th>
+                Actions
+            </th>
+
         </tr>
+
     </thead>
 
     <tbody>
+
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.PatientId</td>
-                <td>@item.FullName</td>
-                <td>@item.DateOfBirth.ToString("dd-MM-yyyy")</td>
-                <td>@item.Gender</td>
-                <td>@item.PhoneNumber</td>
-                <td>@item.Email</td>
-                <td>@item.InsuranceId</td>
 
                 <td>
-                    @Html.ActionLink("View", "Details",
-                        new { id = item.PatientId },
-                        new { @class = "btn btn-info btn-sm" })
-
-                    @Html.ActionLink("Edit", "Edit",
-                        new { id = item.PatientId },
-                        new { @class = "btn btn-warning btn-sm" })
-
-                 
+                    @item.PatientId
                 </td>
+
+                <td>
+                    @item.FullName
+                </td>
+
+                <td>
+                    @item.DateOfBirth
+                    .ToString("dd-MM-yyyy")
+                </td>
+
+                <td>
+                    @item.Gender
+                </td>
+
+                <td>
+                    @item.PhoneNumber
+                </td>
+
+                <td>
+                    @item.Email
+                </td>
+
+                <td>
+                    @item.InsuranceId
+                </td>
+
+                <td>
+
+                    @Html.ActionLink(
+                        "View",
+                        "Details",
+                        new
+                        {
+                            id =
+                            item.PatientId
+                        },
+                        new
+                        {
+                            @class =
+                            "btn btn-info btn-sm"
+                        })
+
+                    @Html.ActionLink(
+                        "Edit",
+                        "Edit",
+                        new
+                        {
+                            id =
+                            item.PatientId
+                        },
+                        new
+                        {
+                            @class =
+                            "btn btn-warning btn-sm"
+                        })
+
+                </td>
+
             </tr>
         }
+
     </tbody>
+
 </table>

@@ -1,17 +1,17 @@
-﻿using HealthAppWebApi.DTOs;
+﻿using HealthAppWebApi.Constants;
 using HealthAppWebApi.Models;
 using HealthAppWebApi.Repositories.Interface;
 using HealthAppWebApi.Services.Interface;
+using SharedDto.AppointmentDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using HealthAppWebApi.Constants;
+using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Services.Impl
 {
     public class AppointmentService
-     : IAppointmentService
+        : IAppointmentService
     {
         private readonly
             IAppointmentRepository _repo;
@@ -22,91 +22,144 @@ namespace HealthAppWebApi.Services.Impl
             _repo = repo;
         }
 
-        public List<AppointmentDto>
-            GetAllAppointments()
+        public async Task<List<AppointmentDto>>
+            GetAllAppointmentsAsync()
         {
-            return _repo.GetAll()
-                .Select(a =>
-                    new AppointmentDto
-                    {
-                        AppointmentId =
-                            a.AppointmentId,
+            var appointments =
+                await _repo.GetAllAsync();
 
-                        PatientName =
-                            a.Patient.FullName,
+            return appointments
+                .Select(a => new AppointmentDto
+                {
+                    AppointmentId =
+                        a.AppointmentId,
 
-                        DoctorName =
-                            a.Doctor.FullName,
+                    PatientName =
+                        a.Patient.FullName,
 
-                        ScheduledDate =
-                            a.ScheduledDate
-                            .ToShortDateString(),
+                    DoctorName =
+                        a.Doctor.FullName,
 
-                        TimeSlot =
-                            a.TimeSlot,
+                    ScheduledDate =
+                        a.ScheduledDate,
 
-                        Status =
-                            a.Status
-                            .ToString()
-                    })
+                    TimeSlot =
+                        a.TimeSlot,
+
+                    Status =
+                        a.Status.ToString(),
+
+                    CancellationReason =
+                        a.CancellationReason
+                })
                 .ToList();
         }
 
-        public void BookAppointment(
+        public async Task<AppointmentDto>
+            GetAppointmentByIdAsync(
+                int id)
+        {
+            Appointment appointment =
+                await _repo.GetByIdAsync(id);
+
+            if (appointment == null)
+            {
+                throw new Exception(
+                    "Appointment not found.");
+            }
+
+            return new AppointmentDto
+            {
+                AppointmentId =
+                    appointment.AppointmentId,
+
+                PatientName =
+                    appointment.Patient.FullName,
+
+                DoctorName =
+                    appointment.Doctor.FullName,
+
+                ScheduledDate =
+                    appointment.ScheduledDate,
+
+                TimeSlot =
+                    appointment.TimeSlot,
+
+                Status =
+                    appointment.Status.ToString(),
+
+                CancellationReason =
+                    appointment.CancellationReason
+            };
+        }
+
+        public async Task BookAppointmentAsync(
             CreateAppointmentDto dto)
         {
             if (dto.ScheduledDate.Date <
                 DateTime.Today)
             {
                 throw new Exception(
-                    "Past date not allowed.");
+                    "Past dates are not allowed.");
             }
 
-            if (!TimeSlots.Slots.Contains(dto.TimeSlot))
+            if (!TimeSlots.Slots
+                .Contains(dto.TimeSlot))
             {
                 throw new Exception(
                     "Invalid time slot.");
             }
 
             if (dto.ScheduledDate.Date ==
-    DateTime.Today)
+                DateTime.Today)
             {
                 DateTime slotDateTime =
                     GetSlotDateTime(
                         dto.ScheduledDate,
                         dto.TimeSlot);
 
-                if (slotDateTime <
+                if (slotDateTime <=
                     DateTime.Now)
                 {
                     throw new Exception(
-                        "Cannot book a past time slot.");
+                        "Past time slots cannot be booked.");
                 }
             }
 
-            
-            if (_repo.IsDoctorSlotBooked(
-                dto.DoctorId,
-                dto.ScheduledDate,
-                dto.TimeSlot))
+            bool isBooked =
+                await _repo
+                .IsDoctorSlotBookedAsync(
+                    dto.DoctorId,
+                    dto.ScheduledDate,
+                    dto.TimeSlot);
+
+            if (isBooked)
             {
                 throw new Exception(
-                    "Doctor already booked.");
+                    "Selected slot is already booked.");
             }
 
-            if (_repo.HasPatientSlotConflict(
-                dto.PatientId,
-                dto.ScheduledDate,
-                dto.TimeSlot))
+            bool hasConflict =
+                await _repo
+                .HasPatientSlotConflictAsync(
+                    dto.PatientId,
+                    dto.ScheduledDate,
+                    dto.TimeSlot);
+
+            if (hasConflict)
             {
                 throw new Exception(
-                    "Patient already has appointment in this slot.");
+                    "Patient already has another appointment during this slot.");
             }
 
-            if (_repo.HasAppointmentWithDoctorOnSameDay(
-    dto.PatientId,
-    dto.DoctorId,
-    dto.ScheduledDate))
+            bool alreadyExists =
+                await _repo
+                .HasAppointmentWithDoctorOnSameDayAsync(
+                    dto.PatientId,
+                    dto.DoctorId,
+                    dto.ScheduledDate);
+
+            if (alreadyExists)
             {
                 throw new Exception(
                     "Patient already has an appointment with this doctor on this date.");
@@ -131,15 +184,15 @@ namespace HealthAppWebApi.Services.Impl
                         AppointmentStatus.Pending
                 };
 
-            _repo.Add(
+            await _repo.AddAsync(
                 appointment);
         }
 
-        public void ConfirmAppointment(
+        public async Task ConfirmAppointmentAsync(
             int id)
         {
             Appointment appointment =
-                _repo.GetById(id);
+                await _repo.GetByIdAsync(id);
 
             if (appointment == null)
             {
@@ -150,16 +203,16 @@ namespace HealthAppWebApi.Services.Impl
             appointment.Status =
                 AppointmentStatus.Confirmed;
 
-            _repo.Update(
+            await _repo.UpdateAsync(
                 appointment);
         }
 
-        public void CancelAppointment(
+        public async Task CancelAppointmentAsync(
             int id,
             string reason)
         {
             Appointment appointment =
-                _repo.GetById(id);
+                await _repo.GetByIdAsync(id);
 
             if (appointment == null)
             {
@@ -174,84 +227,188 @@ namespace HealthAppWebApi.Services.Impl
                     "Completed appointments cannot be cancelled.");
             }
 
+            if (string.IsNullOrWhiteSpace(
+                reason))
+            {
+                throw new Exception(
+                    "Cancellation reason is required.");
+            }
+
             appointment.Status =
                 AppointmentStatus.Cancelled;
 
             appointment.CancellationReason =
                 reason;
 
-            _repo.Update(
+            await _repo.UpdateAsync(
                 appointment);
         }
 
-        public List<AppointmentDto>
-    GetUpcomingAppointmentsForDoctor(
-        int doctorId)
+        public async Task<List<AppointmentDto>>
+            GetAppointmentsForPatientAsync(
+                int patientId)
         {
-            return _repo
-                .GetUpcomingConfirmedAppointmentsByDoctor(
-                    doctorId)
-                .Select(a =>
-                    new AppointmentDto
-                    {
-                        AppointmentId =
-                            a.AppointmentId,
+            var appointments =
+                await _repo
+                .GetAppointmentsByPatientAsync(
+                    patientId);
 
-                        PatientName =
-                            a.Patient.FullName,
+            return appointments
+                .Select(a => new AppointmentDto
+                {
+                    AppointmentId =
+                        a.AppointmentId,
 
-                        DoctorName =
-                            a.Doctor.FullName,
+                    PatientName =
+                        a.Patient.FullName,
 
-                        ScheduledDate =
-                            a.ScheduledDate
-                            .ToShortDateString(),
+                    DoctorName =
+                        a.Doctor.FullName,
 
-                        TimeSlot =
-                            a.TimeSlot,
+                    ScheduledDate =
+                        a.ScheduledDate,
 
-                        Status =
-                            a.Status.ToString()
-                    })
+                    TimeSlot =
+                        a.TimeSlot,
+
+                    Status =
+                        a.Status.ToString(),
+
+                    CancellationReason =
+                        a.CancellationReason
+                })
                 .ToList();
         }
 
-
-        public List<AppointmentDto>
-    GetAppointmentsForPatient(
-        int patientId)
+        public async Task<List<AppointmentDto>>
+            GetUpcomingAppointmentsAsync()
         {
-            return _repo
-                .GetAppointmentsByPatient(
-                    patientId)
-                .Select(a =>
-                    new AppointmentDto
-                    {
-                        AppointmentId =
-                            a.AppointmentId,
+            var appointments =
+                await _repo
+                .GetUpcomingAppointmentsAsync();
 
-                        PatientName =
-                            a.Patient.FullName,
+            return appointments
+                .Select(a => new AppointmentDto
+                {
+                    AppointmentId =
+                        a.AppointmentId,
 
-                        DoctorName =
-                            a.Doctor.FullName,
+                    PatientName =
+                        a.Patient.FullName,
 
-                        ScheduledDate =
-                            a.ScheduledDate
-                            .ToShortDateString(),
+                    DoctorName =
+                        a.Doctor.FullName,
 
-                        TimeSlot =
-                            a.TimeSlot,
+                    ScheduledDate =
+                        a.ScheduledDate,
 
-                        Status =
-                            a.Status.ToString()
-                    })
+                    TimeSlot =
+                        a.TimeSlot,
+
+                    Status =
+                        a.Status.ToString(),
+
+                    CancellationReason =
+                        a.CancellationReason
+                })
                 .ToList();
+        }
+
+        public async Task<List<AppointmentDto>>
+            GetUpcomingAppointmentsByDoctorAsync(
+                string doctorName)
+        {
+            var appointments =
+                await _repo
+                .GetUpcomingAppointmentsByDoctorAsync(
+                    doctorName);
+
+            return appointments
+                .Select(a => new AppointmentDto
+                {
+                    AppointmentId =
+                        a.AppointmentId,
+
+                    PatientName =
+                        a.Patient.FullName,
+
+                    DoctorName =
+                        a.Doctor.FullName,
+
+                    ScheduledDate =
+                        a.ScheduledDate,
+
+                    TimeSlot =
+                        a.TimeSlot,
+
+                    Status =
+                        a.Status.ToString(),
+
+                    CancellationReason =
+                        a.CancellationReason
+                })
+                .ToList();
+        }
+
+        public async Task<List<string>>
+            GetAvailableSlotsAsync(
+                int doctorId,
+                DateTime scheduledDate)
+        {
+            return await _repo
+                .GetAvailableSlotsAsync(
+                    doctorId,
+                    scheduledDate);
+        }
+
+        public async Task<List<AppointmentDto>>
+            GetAppointmentsByPatientNameAsync(
+                string patientName)
+        {
+            var appointments =
+                await _repo
+                .GetAppointmentsByPatientNameAsync(
+                    patientName);
+
+            return appointments
+                .Select(a => new AppointmentDto
+                {
+                    AppointmentId =
+                        a.AppointmentId,
+
+                    PatientName =
+                        a.Patient.FullName,
+
+                    DoctorName =
+                        a.Doctor.FullName,
+
+                    ScheduledDate =
+                        a.ScheduledDate,
+
+                    TimeSlot =
+                        a.TimeSlot,
+
+                    Status =
+                        a.Status.ToString(),
+
+                    CancellationReason =
+                        a.CancellationReason
+                })
+                .ToList();
+        }
+
+        public async Task<bool>
+            HealthRecordExistsAsync(
+                int appointmentId)
+        {
+            return await _repo
+                .HealthRecordExistsAsync(
+                    appointmentId);
         }
 
         private DateTime GetSlotDateTime(
-    DateTime date,
-    string slot)
+            DateTime date,
+            string slot)
         {
             string timePart =
                 DateTime.Parse(slot)

@@ -1,4 +1,4 @@
-﻿@model HealthAppMVC.Models.Doctor
+﻿@model SharedDto.DoctorDtos.CreateDoctorDto
 
 @{
     ViewBag.Title = "Add Doctor";
@@ -23,7 +23,9 @@
             new { @class = "form-control" })
 
         @Html.ValidationMessageFor(
-            m => m.FullName)
+            m => m.FullName,
+            "",
+            new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
@@ -31,12 +33,69 @@
 
         @Html.DropDownListFor(
             m => m.Specialisation,
-            new SelectList(
-                Enum.GetValues(
-                    typeof(
-                        HealthAppMVC.Models.SpecialisationType))),
+            new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "Cardiologist",
+                    Value = "Cardiologist"
+                },
+
+                new SelectListItem
+                {
+                    Text = "Dermatologist",
+                    Value = "Dermatologist"
+                },
+
+                new SelectListItem
+                {
+                    Text = "Neurologist",
+                    Value = "Neurologist"
+                },
+
+                new SelectListItem
+                {
+                    Text = "Orthopedic",
+                    Value = "Orthopedic"
+                },
+
+                new SelectListItem
+                {
+                    Text = "Pediatrician",
+                    Value = "Pediatrician"
+                },
+
+                new SelectListItem
+                {
+                    Text = "General Physician",
+                    Value = "GeneralPhysician"
+                },
+
+                new SelectListItem
+                {
+                    Text = "Psychiatrist",
+                    Value = "Psychiatrist"
+                },
+
+                new SelectListItem
+                {
+                    Text = "ENT",
+                    Value = "ENT"
+                },
+
+                new SelectListItem
+                {
+                    Text = "Gynecologist",
+                    Value = "Gynecologist"
+                }
+            },
             "--Select--",
             new { @class = "form-control" })
+
+        @Html.ValidationMessageFor(
+            m => m.Specialisation,
+            "",
+            new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
@@ -47,7 +106,9 @@
             new { @class = "form-control" })
 
         @Html.ValidationMessageFor(
-            m => m.DoctorPhoneNo)
+            m => m.DoctorPhoneNo,
+            "",
+            new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
@@ -55,10 +116,16 @@
 
         @Html.TextBoxFor(
             m => m.DoctorEmail,
-            new { @class = "form-control" })
+            new
+            {
+                @class = "form-control",
+                type = "email"
+            })
 
         @Html.ValidationMessageFor(
-            m => m.DoctorEmail)
+            m => m.DoctorEmail,
+            "",
+            new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
@@ -66,10 +133,16 @@
 
         @Html.TextBoxFor(
             m => m.YearsOfExperience,
-            new { @class = "form-control" })
+            new
+            {
+                @class = "form-control",
+                type = "number"
+            })
 
         @Html.ValidationMessageFor(
-            m => m.YearsOfExperience)
+            m => m.YearsOfExperience,
+            "",
+            new { @class = "text-danger" })
     </div>
 
     <div class="form-group">
@@ -77,10 +150,17 @@
 
         @Html.TextBoxFor(
             m => m.ConsultationFee,
-            new { @class = "form-control" })
+            new
+            {
+                @class = "form-control",
+                type = "number",
+                step = "0.01"
+            })
 
         @Html.ValidationMessageFor(
-            m => m.ConsultationFee)
+            m => m.ConsultationFee,
+            "",
+            new { @class = "text-danger" })
     </div>
 
     <br />

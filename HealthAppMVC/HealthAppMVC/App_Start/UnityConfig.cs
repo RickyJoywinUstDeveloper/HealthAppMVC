@@ -1,5 +1,4 @@
-using HealthAppMVC.Repository.Implementation;
-using HealthAppMVC.Repository.Interface;
+
 using HealthAppMVC.Services.Implementation;
 using HealthAppMVC.Services.Interface;
 using System.Web.Mvc;
@@ -19,37 +18,23 @@ namespace HealthAppMVC
 
             // e.g. container.RegisterType<ITestService, TestService>();
 
-            container.RegisterType<
-    IPatientRepository,
-    PatientRepository>();
+          
 
-            container.RegisterType<
-                IPatientService,
-                PatientService>();
+            container.RegisterType
+     <IPatientApiService,
+      PatientApiService>();
 
-            container.RegisterType<
-                IDoctorRepository,
-                DoctorRepository>();
+            container.RegisterType
+                <IDoctorApiService,
+                 DoctorApiService>();
 
-            container.RegisterType<
-                IDoctorService,
-                DoctorService>();
+            container.RegisterType
+                <IAppointmentApiService,
+                 AppointmentApiService>();
 
-            container.RegisterType<
-                IAppointmentRepository,
-                AppointmentRepository>();
-
-            container.RegisterType<
-                IAppointmentService,
-                AppointmentService>();
-
-            container.RegisterType<
-                IHealthRecordRepository,
-                HealthRecordRepository>();
-
-            container.RegisterType<
-                IHealthRecordService,
-                HealthRecordService>();
+            container.RegisterType
+                <IHealthRecordApiService,
+                 HealthRecordApiService>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

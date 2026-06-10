@@ -1,4 +1,4 @@
-﻿@model HealthAppMVC.Models.Patient
+﻿@model SharedDto.PatientDtos.PatientDto
 
 @{
     ViewBag.Title = "Patient Details";
@@ -8,22 +8,47 @@
 
 <div class="card p-3">
 
-    <p><strong>ID :</strong> @Model.PatientId</p>
+    <p>
+        <strong>ID :</strong>
+        @Model.PatientId
+    </p>
 
-    <p><strong>Name :</strong> @Model.FullName</p>
+    <p>
+        <strong>Name :</strong>
+        @Model.FullName
+    </p>
 
     <p>
         <strong>DOB :</strong>
-        @Model.DateOfBirth.ToString("dd-MM-yyyy")
+        @Model.DateOfBirth
+        .ToString("dd-MM-yyyy")
     </p>
 
-    <p><strong>Gender :</strong> @Model.Gender</p>
+    <p>
+        <strong>Gender :</strong>
+        @Model.Gender
+    </p>
 
-    <p><strong>Phone :</strong> @Model.PhoneNumber</p>
+    <p>
+        <strong>Phone :</strong>
+        @Model.PhoneNumber
+    </p>
 
-    <p><strong>Email :</strong> @Model.Email</p>
+    <p>
+        <strong>Email :</strong>
+        @Model.Email
+    </p>
 
-    <p><strong>Insurance :</strong> @Model.InsuranceId</p>
+    <p>
+        <strong>Insurance :</strong>
+        @Model.InsuranceId
+    </p>
+
+    <p>
+        <strong>Created Date :</strong>
+        @Model.CreatedDate
+        .ToString("dd-MM-yyyy")
+    </p>
 
 </div>
 

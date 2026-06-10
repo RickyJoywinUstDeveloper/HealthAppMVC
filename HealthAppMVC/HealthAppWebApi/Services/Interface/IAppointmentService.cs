@@ -1,31 +1,51 @@
-﻿using HealthAppWebApi.DTOs;
+﻿using SharedDto.AppointmentDtos;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Services.Interface
 {
     public interface IAppointmentService
     {
-        List<AppointmentDto>
-            GetAllAppointments();
+        Task<List<AppointmentDto>>
+            GetAllAppointmentsAsync();
 
-        void BookAppointment(
+        Task<AppointmentDto>
+            GetAppointmentByIdAsync(
+                int id);
+
+        Task BookAppointmentAsync(
             CreateAppointmentDto dto);
 
-        void ConfirmAppointment(
+        Task ConfirmAppointmentAsync(
             int id);
 
-        void CancelAppointment(
+        Task CancelAppointmentAsync(
             int id,
             string reason);
 
-        List<AppointmentDto>
-    GetUpcomingAppointmentsForDoctor(
-        int doctorId);
+        Task<List<AppointmentDto>>
+            GetAppointmentsForPatientAsync(
+                int patientId);
 
-        List<AppointmentDto> GetAppointmentsForPatient (int patientId);
+        Task<List<AppointmentDto>>
+            GetUpcomingAppointmentsAsync();
+
+        Task<List<AppointmentDto>>
+            GetUpcomingAppointmentsByDoctorAsync(
+                string doctorName);
+
+        Task<List<string>>
+            GetAvailableSlotsAsync(
+                int doctorId,
+                DateTime scheduledDate);
+
+        Task<List<AppointmentDto>>
+            GetAppointmentsByPatientNameAsync(
+                string patientName);
+
+        Task<bool>
+            HealthRecordExistsAsync(
+                int appointmentId);
     }
 }

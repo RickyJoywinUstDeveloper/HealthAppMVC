@@ -1,27 +1,34 @@
-﻿using HealthAppWebApi.DTOs;
-using System;
+﻿using SharedDto.DoctorDtos;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Services.Interface
 {
     public interface IDoctorService
     {
-        List<DoctorDto> GetAllDoctors();
+        Task<List<DoctorDto>>
+            GetAllDoctorsAsync();
 
-        DoctorDto GetDoctorById(int id);
+        Task<DoctorDto>
+            GetDoctorByIdAsync(int id);
 
-        void AddDoctor(CreateDoctorDto dto);
+        Task AddDoctorAsync(
+            CreateDoctorDto dto);
 
-        void UpdateDoctor(int id,
-                          CreateDoctorDto dto);
+        Task UpdateDoctorAsync(
+            int id,
+            CreateDoctorDto dto);
 
-        void ChangeStatus(int id,
-                          bool isActive);
+        Task ChangeStatusAsync(
+            int id,
+            bool isActive);
 
-        List<DoctorDto> GetDoctorsBySpecialisation(
-    string specialisation);
+        Task<List<DoctorDto>>
+            GetDoctorsBySpecialisationAsync(
+                string specialisation);
+
+        Task<List<DoctorDto>>
+            SearchByNameAsync(
+                string name);
     }
 }

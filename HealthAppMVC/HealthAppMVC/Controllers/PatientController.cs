@@ -1,37 +1,44 @@
-﻿using HealthAppMVC.Models;
-using HealthAppMVC.Services.Interface;
+﻿using HealthAppMVC.Services.Interface;
+using SharedDto.PatientDtos;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace HealthAppMVC.Controllers
 {
-    public class PatientController : Controller
+    public class PatientController
+        : Controller
     {
-        private readonly IPatientService _patientService;
+        private readonly
+            IPatientApiService
+            _patientService;
 
         public PatientController(
-            IPatientService patientService)
+            IPatientApiService patientService)
         {
-            _patientService = patientService;
+            _patientService =
+                patientService;
         }
 
         // GET: Patient
-        public ActionResult Index()
+        public async Task<ActionResult>
+            Index()
         {
             var patients =
-                _patientService.GetAllPatients();
+                await _patientService
+                    .GetAllPatientsAsync();
 
             return View(patients);
         }
 
         // GET: Patient/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult>
+            Details(int id)
         {
             var patient =
-                _patientService.GetPatientById(id);
+                await _patientService
+                    .GetPatientByIdAsync(id);
 
             if (patient == null)
             {
@@ -50,19 +57,21 @@ namespace HealthAppMVC.Controllers
         // POST: Patient/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Patient patient)
+        public async Task<ActionResult>
+            Create(CreatePatientDto dto)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
-                    _patientService
-                        .RegisterPatient(patient);
-
-                    return RedirectToAction("Index");
+                    return View(dto);
                 }
 
-                return View(patient);
+                await _patientService
+                    .CreatePatientAsync(dto);
+
+                return RedirectToAction(
+                    "Index");
             }
             catch (Exception ex)
             {
@@ -70,40 +79,70 @@ namespace HealthAppMVC.Controllers
                     "",
                     ex.Message);
 
-                return View(patient);
+                return View(dto);
             }
         }
 
         // GET: Patient/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult>
+            Edit(int id)
         {
             var patient =
-                _patientService.GetPatientById(id);
+                await _patientService
+                    .GetPatientByIdAsync(id);
 
             if (patient == null)
             {
                 return HttpNotFound();
             }
 
-            return View(patient);
+            CreatePatientDto dto =
+                new CreatePatientDto
+                {
+                    FullName =
+                        patient.FullName,
+
+                    DateOfBirth =
+                        patient.DateOfBirth,
+
+                    Gender =
+                        patient.Gender,
+
+                    Email =
+                        patient.Email,
+
+                    PhoneNumber =
+                        patient.PhoneNumber,
+
+                    InsuranceId =
+                        patient.InsuranceId
+                };
+
+            return View(dto);
         }
 
         // POST: Patient/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Patient patient)
+        public async Task<ActionResult>
+            Edit(
+                int id,
+                CreatePatientDto dto)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
-                    _patientService
-                        .UpdatePatient(patient);
-
-                    return RedirectToAction("Index");
+                    return View(dto);
                 }
 
-                return View(patient);
+                await _patientService
+                    .UpdatePatientAsync(
+                        id,
+                        dto);
+
+                return RedirectToAction(
+                    "Index");
             }
             catch (Exception ex)
             {
@@ -111,7 +150,7 @@ namespace HealthAppMVC.Controllers
                     "",
                     ex.Message);
 
-                return View(patient);
+                return View(dto);
             }
         }
 
@@ -120,48 +159,66 @@ namespace HealthAppMVC.Controllers
             return View();
         }
 
-        public ActionResult SearchPatient()
+        public async Task<ActionResult>
+            SearchPatient()
         {
-            var patients = _patientService.GetAllPatients();
+            var patients =
+                await _patientService
+                    .GetAllPatientsAsync();
 
             return View(patients);
         }
 
-
-        public JsonResult SearchPatientNames(
-    string term)
+        public async Task<JsonResult>
+            SearchPatientNames(
+                string term)
         {
             var patients =
-                _patientService
-                .SearchByName(term)
-                .Select(p => new
+                await _patientService
+                    .SearchByNameAsync(term);
+
+            var result =
+                patients.Select(p => new
                 {
                     label = p.FullName,
                     value = p.FullName
-                })
-                .ToList();
+                }).ToList();
 
             return Json(
-                patients,
+                result,
                 JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult EditPatientByName(
-    int id)
+        public ActionResult
+            EditPatientByName(int id)
         {
             return RedirectToAction(
                 "Edit",
                 new { id });
         }
 
-        public ActionResult PatientSearch(
-    string patientName)
+        public async Task<ActionResult>
+            PatientSearch(
+                string patientName)
         {
-            var patients = _patientService.GetAllPatients();
+            var patients =
+                await _patientService
+                    .GetAllPatientsAsync();
+
+            if (!string.IsNullOrWhiteSpace(
+                patientName))
+            {
+                patients =
+                    patients.Where(p =>
+                        p.FullName
+                        .ToLower()
+                        .Contains(
+                            patientName
+                            .ToLower()))
+                    .ToList();
+            }
 
             return View(patients);
         }
-
-
     }
 }

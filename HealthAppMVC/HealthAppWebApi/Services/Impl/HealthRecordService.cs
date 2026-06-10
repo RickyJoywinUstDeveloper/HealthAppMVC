@@ -1,96 +1,211 @@
-﻿using HealthAppWebApi.DTOs;
-using HealthAppWebApi.Models;
+﻿using HealthAppWebApi.Models;
 using HealthAppWebApi.Repositories.Interface;
 using HealthAppWebApi.Services.Interface;
+using SharedDto.HealthRecordDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Services.Impl
 {
-    public class HealthRecordService : IHealthRecordService
+    public class HealthRecordService
+        : IHealthRecordService
     {
-        private readonly IHealthRecordRepository _recordRepo;
-        private readonly IAppointmentRepository _appointmentRepo;
+        private readonly
+            IHealthRecordRepository _recordRepo;
+
+        private readonly
+            IAppointmentRepository _appointmentRepo;
 
         public HealthRecordService(
             IHealthRecordRepository recordRepo,
             IAppointmentRepository appointmentRepo)
         {
             _recordRepo = recordRepo;
+
             _appointmentRepo = appointmentRepo;
         }
 
-        public List<HealthRecordDto> GetAll()
+        public async Task<List<HealthRecordDto>>
+            GetAllAsync()
         {
-            return _recordRepo.GetAll()
+            var records =
+                await _recordRepo.GetAllAsync();
+
+            return records
                 .Select(h => new HealthRecordDto
                 {
-                    HealthRecordId = h.HealthRecordId,
-                    PatientName = h.Appointment.Patient.FullName,
-                    DoctorName = h.Appointment.Doctor.FullName,
-                    Diagnosis = h.Diagnosis,
-                    Prescription = h.Prescription,
-                    VisitDate = h.VisitDate,
-                    Notes = h.Notes
+                    HealthRecordId =
+                        h.HealthRecordId,
+
+                    VisitDate =
+                        h.VisitDate,
+
+                    PatientName =
+                        h.Appointment
+                            .Patient
+                            .FullName,
+
+                    DoctorName =
+                        h.Appointment
+                            .Doctor
+                            .FullName,
+
+                    Diagnosis =
+                        h.Diagnosis,
+
+                    Prescription =
+                        h.Prescription,
+
+                    Notes =
+                        h.Notes
                 })
                 .ToList();
         }
 
-        public HealthRecordDto GetById(int id)
+        public async Task<HealthRecordDto>
+            GetByIdAsync(int id)
         {
-            HealthRecord record = _recordRepo.GetById(id);
+            HealthRecord record =
+                await _recordRepo
+                    .GetByIdAsync(id);
 
             if (record == null)
-                throw new Exception("Health Record not found.");
+            {
+                throw new Exception(
+                    "Health record not found.");
+            }
 
             return new HealthRecordDto
             {
-                HealthRecordId = record.HealthRecordId,
-                PatientName = record.Appointment.Patient.FullName,
-                DoctorName = record.Appointment.Doctor.FullName,
-                Diagnosis = record.Diagnosis,
-                Prescription = record.Prescription,
-                VisitDate= record.VisitDate,
-                Notes = record.Notes
+                HealthRecordId =
+                    record.HealthRecordId,
+
+                VisitDate =
+                    record.VisitDate,
+
+                PatientName =
+                    record.Appointment
+                        .Patient
+                        .FullName,
+
+                DoctorName =
+                    record.Appointment
+                        .Doctor
+                        .FullName,
+
+                Diagnosis =
+                    record.Diagnosis,
+
+                Prescription =
+                    record.Prescription,
+
+                Notes =
+                    record.Notes
             };
         }
 
-        public void Add(CreateHealthRecordDto dto)
+        public async Task<List<HealthRecordDto>>
+            GetPatientHistoryAsync(
+                int patientId)
+        {
+            var records =
+                await _recordRepo
+                    .GetByPatientIdAsync(
+                        patientId);
+
+            return records
+                .Select(h => new HealthRecordDto
+                {
+                    HealthRecordId =
+                        h.HealthRecordId,
+
+                    VisitDate =
+                        h.VisitDate,
+
+                    PatientName =
+                        h.Appointment
+                            .Patient
+                            .FullName,
+
+                    DoctorName =
+                        h.Appointment
+                            .Doctor
+                            .FullName,
+
+                    Diagnosis =
+                        h.Diagnosis,
+
+                    Prescription =
+                        h.Prescription,
+
+                    Notes =
+                        h.Notes
+                })
+                .ToList();
+        }
+
+        public async Task AddAsync(
+            CreateHealthRecordDto dto)
         {
             Appointment appointment =
-                _appointmentRepo.GetById(dto.AppointmentId);
+                await _appointmentRepo
+                    .GetByIdAsync(
+                        dto.AppointmentId);
 
             if (appointment == null)
-                throw new Exception("Appointment not found.");
-
-            if (appointment.Status != AppointmentStatus.Confirmed)
             {
                 throw new Exception(
-                    "Health record can be added only for confirmed appointments.");
+                    "Appointment not found.");
             }
 
-            if (_recordRepo.GetByAppointmentId(dto.AppointmentId) != null)
+            if (appointment.Status !=
+                AppointmentStatus.Confirmed)
+            {
+                throw new Exception(
+                    "Health record can only be added for confirmed appointments.");
+            }
+
+            HealthRecord existingRecord =
+                await _recordRepo
+                    .GetByAppointmentIdAsync(
+                        dto.AppointmentId);
+
+            if (existingRecord != null)
             {
                 throw new Exception(
                     "Health record already exists for this appointment.");
             }
 
-            HealthRecord record = new HealthRecord
-            {
-                AppointmentId = dto.AppointmentId,
-                VisitDate = DateTime.Now,
-                Diagnosis = dto.Diagnosis,
-                Prescription = dto.Prescription,
-                Notes = dto.Notes
-            };
+            HealthRecord record =
+                new HealthRecord
+                {
+                    AppointmentId =
+                        dto.AppointmentId,
 
-            _recordRepo.Add(record);
+                    VisitDate =
+                        DateTime.UtcNow,
 
-            appointment.Status = AppointmentStatus.Completed;
+                    Diagnosis =
+                        dto.Diagnosis,
 
-            _appointmentRepo.Update(appointment);
+                    Prescription =
+                        dto.Prescription,
+
+                    Notes =
+                        dto.Notes
+                };
+
+            await _recordRepo
+                .AddAsync(record);
+
+            appointment.Status =
+                AppointmentStatus.Completed;
+
+            await _appointmentRepo
+                .UpdateAsync(
+                    appointment);
         }
     }
 }

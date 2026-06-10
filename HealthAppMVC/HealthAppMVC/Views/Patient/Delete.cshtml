@@ -1,4 +1,4 @@
-﻿@model HealthAppMVC.Models.Patient
+﻿@model SharedDto.PatientDtos.PatientDto
 
 @{
     ViewBag.Title = "Delete Patient";
@@ -10,7 +10,53 @@
 
     Are you sure you want to delete
 
-    <strong>@Model.FullName</strong> ?
+    <strong>
+        @Model.FullName
+    </strong> ?
+
+</div>
+
+<div class="card mb-3">
+
+    <div class="card-body">
+
+        <p>
+            <strong>Patient ID:</strong>
+            @Model.PatientId
+        </p>
+
+        <p>
+            <strong>Name:</strong>
+            @Model.FullName
+        </p>
+
+        <p>
+            <strong>Date of Birth:</strong>
+            @Model.DateOfBirth
+            .ToString("dd-MM-yyyy")
+        </p>
+
+        <p>
+            <strong>Gender:</strong>
+            @Model.Gender
+        </p>
+
+        <p>
+            <strong>Phone:</strong>
+            @Model.PhoneNumber
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            @Model.Email
+        </p>
+
+        <p>
+            <strong>Insurance ID:</strong>
+            @Model.InsuranceId
+        </p>
+
+    </div>
 
 </div>
 

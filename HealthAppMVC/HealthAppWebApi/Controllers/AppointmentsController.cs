@@ -1,16 +1,14 @@
-﻿using HealthAppWebApi.DTOs;
-using HealthAppWebApi.Services.Interface;
+﻿using HealthAppWebApi.Services.Interface;
+using SharedDto.AppointmentDtos;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace HealthAppWebApi.Controllers
 {
     [RoutePrefix("api/appointments")]
     public class AppointmentsController
-      : ApiController
+        : ApiController
     {
         private readonly
             IAppointmentService _service;
@@ -23,23 +21,57 @@ namespace HealthAppWebApi.Controllers
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult GetAll()
+        public async Task<IHttpActionResult>
+            GetAll()
         {
-            return Ok(
-                _service.GetAllAppointments());
+            var appointments =
+                await _service
+                    .GetAllAppointmentsAsync();
+
+            return Ok(appointments);
+        }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IHttpActionResult>
+            Get(int id)
+        {
+            try
+            {
+                var appointment =
+                    await _service
+                        .GetAppointmentByIdAsync(
+                            id);
+
+                return Ok(appointment);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    ex.Message);
+            }
         }
 
         [HttpPost]
         [Route("")]
-        public IHttpActionResult Book(
-            CreateAppointmentDto dto)
+        public async Task<IHttpActionResult>
+            Book(
+                CreateAppointmentDto dto)
         {
             try
             {
-                _service.BookAppointment(dto);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(
+                        ModelState);
+                }
+
+                await _service
+                    .BookAppointmentAsync(
+                        dto);
 
                 return Ok(
-                    "Appointment booked.");
+                    "Appointment booked successfully.");
             }
             catch (Exception ex)
             {
@@ -49,53 +81,138 @@ namespace HealthAppWebApi.Controllers
         }
 
         [HttpPut]
-        [Route("{id}/confirm")]
-        public IHttpActionResult Confirm(
-            int id)
+        [Route("{id:int}/confirm")]
+        public async Task<IHttpActionResult>
+            Confirm(int id)
         {
-            _service.ConfirmAppointment(
-                id);
+            try
+            {
+                await _service
+                    .ConfirmAppointmentAsync(
+                        id);
 
-            return Ok(
-                "Appointment confirmed.");
+                return Ok(
+                    "Appointment confirmed.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    ex.Message);
+            }
         }
 
         [HttpPut]
-        [Route("{id}/cancel")]
-        public IHttpActionResult Cancel(
-            int id,
-            CancelAppointmentDto dto)
+        [Route("{id:int}/cancel")]
+        public async Task<IHttpActionResult>
+            Cancel(
+                int id,
+                CancelAppointmentDto dto)
         {
-            _service.CancelAppointment(
-                id,
-                dto.CancellationReason);
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(
+                        ModelState);
+                }
 
-            return Ok(
-                "Appointment cancelled.");
+                await _service
+                    .CancelAppointmentAsync(
+                        id,
+                        dto.CancellationReason);
+
+                return Ok(
+                    "Appointment cancelled.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    ex.Message);
+            }
         }
 
         [HttpGet]
-        [Route("doctor/{doctorId}/upcoming")]
-        public IHttpActionResult
-    GetUpcomingForDoctor(
-        int doctorId)
+        [Route("patient/{patientId:int}")]
+        public async Task<IHttpActionResult>
+            GetPatientAppointments(
+                int patientId)
         {
-            return Ok(
-                _service
-                .GetUpcomingAppointmentsForDoctor(
-                    doctorId));
+            var appointments =
+                await _service
+                    .GetAppointmentsForPatientAsync(
+                        patientId);
+
+            return Ok(appointments);
         }
 
         [HttpGet]
-        [Route("patient/{patientId}")]
-        public IHttpActionResult
-    GetPatientAppointments(
-        int patientId)
+        [Route("upcoming")]
+        public async Task<IHttpActionResult>
+            GetUpcomingAppointments()
         {
-            return Ok(
-                _service
-                .GetAppointmentsForPatient(
-                    patientId));
+            var appointments =
+                await _service
+                    .GetUpcomingAppointmentsAsync();
+
+            return Ok(appointments);
+        }
+
+        [HttpGet]
+        [Route("upcoming/doctor")]
+        public async Task<IHttpActionResult>
+            GetUpcomingAppointmentsByDoctor(
+                string doctorName)
+        {
+            var appointments =
+                await _service
+                    .GetUpcomingAppointmentsByDoctorAsync(
+                        doctorName);
+
+            return Ok(appointments);
+        }
+
+        [HttpGet]
+        [Route("available-slots")]
+        public async Task<IHttpActionResult>
+            GetAvailableSlots(
+                int doctorId,
+                DateTime scheduledDate)
+        {
+            var slots =
+                await _service
+                    .GetAvailableSlotsAsync(
+                        doctorId,
+                        scheduledDate);
+
+            return Ok(slots);
+        }
+
+        [HttpGet]
+        [Route("search/patient")]
+        public async Task<IHttpActionResult>
+            SearchByPatientName(
+                string patientName)
+        {
+            var appointments =
+                await _service
+                    .GetAppointmentsByPatientNameAsync(
+                        patientName);
+
+            return Ok(appointments);
+        }
+
+        [HttpGet]
+        [Route("{appointmentId:int}/healthrecord-exists")]
+        public async Task<IHttpActionResult>
+            HealthRecordExists(
+                int appointmentId)
+        {
+            bool exists =
+                await _service
+                    .HealthRecordExistsAsync(
+                        appointmentId);
+
+            return Ok(exists);
         }
     }
 }

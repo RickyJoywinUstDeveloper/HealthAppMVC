@@ -1,4 +1,4 @@
-﻿@model HealthAppMVC.Models.HealthRecord
+﻿@model SharedDto.HealthRecordDtos.CreateHealthRecordDto
 
 @{
     ViewBag.Title = "Add Health Record";
@@ -10,7 +10,8 @@
 {
     @Html.AntiForgeryToken()
 
-    @Html.HiddenFor(m => m.AppointmentId)
+    @Html.HiddenFor(
+        m => m.AppointmentId)
 
     @Html.ValidationSummary(
         true,
@@ -18,9 +19,11 @@
         new { @class = "text-danger" })
 
     <div class="card">
+
         <div class="card-body">
 
             <div class="form-group">
+
                 <label>Diagnosis</label>
 
                 @Html.TextAreaFor(
@@ -34,10 +37,15 @@
                 @Html.ValidationMessageFor(
                     m => m.Diagnosis,
                     "",
-                    new { @class = "text-danger" })
+                    new
+                    {
+                        @class = "text-danger"
+                    })
+
             </div>
 
             <div class="form-group mt-3">
+
                 <label>Prescription</label>
 
                 @Html.TextAreaFor(
@@ -51,10 +59,15 @@
                 @Html.ValidationMessageFor(
                     m => m.Prescription,
                     "",
-                    new { @class = "text-danger" })
+                    new
+                    {
+                        @class = "text-danger"
+                    })
+
             </div>
 
             <div class="form-group mt-3">
+
                 <label>Notes</label>
 
                 @Html.TextAreaFor(
@@ -68,7 +81,11 @@
                 @Html.ValidationMessageFor(
                     m => m.Notes,
                     "",
-                    new { @class = "text-danger" })
+                    new
+                    {
+                        @class = "text-danger"
+                    })
+
             </div>
 
             <br />
@@ -87,6 +104,8 @@
                 {
                     @class = "btn btn-secondary"
                 })
+
         </div>
+
     </div>
 }

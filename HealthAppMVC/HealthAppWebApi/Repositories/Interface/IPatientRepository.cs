@@ -1,20 +1,23 @@
 ﻿using HealthAppWebApi.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Repositories.Interface
 {
     public interface IPatientRepository
     {
-        List<Patient> GetAll();
+        Task<List<Patient>> GetAllAsync();
 
-        Patient GetById(int id);
+        Task<Patient> GetByIdAsync(int id);
 
-        void Add(Patient patient);
+        Task AddAsync(Patient patient);
 
-        void Update(Patient patient);
+        Task UpdateAsync(Patient patient);
+
+        Task<bool> EmailExistsAsync(string email);
+
+        Task<int> GetAppointmentCountAsync(int patientId);
+
+        Task<List<Patient>> SearchByNameAsync(string name);
     }
 }

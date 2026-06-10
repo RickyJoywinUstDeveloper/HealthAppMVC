@@ -1,4 +1,4 @@
-﻿@model HealthAppMVC.Models.Appointment
+﻿@model SharedDto.AppointmentDtos.CreateAppointmentDto
 
 @{
     ViewBag.Title = "Book Appointment";
@@ -16,6 +16,7 @@
         new { @class = "text-danger" })
 
     <div class="form-group mb-3">
+
         <label>Patient</label>
 
         @Html.DropDownListFor(
@@ -23,9 +24,16 @@
             (SelectList)ViewBag.Patients,
             "-- Select Patient --",
             new { @class = "form-control" })
+
+        @Html.ValidationMessageFor(
+            m => m.PatientId,
+            "",
+            new { @class = "text-danger" })
+
     </div>
 
     <div class="form-group mb-3">
+
         <label>Doctor</label>
 
         @Html.DropDownListFor(
@@ -33,9 +41,16 @@
             (SelectList)ViewBag.Doctors,
             "-- Select Doctor --",
             new { @class = "form-control" })
+
+        @Html.ValidationMessageFor(
+            m => m.DoctorId,
+            "",
+            new { @class = "text-danger" })
+
     </div>
 
     <div class="form-group mb-3">
+
         <label>Date</label>
 
         @Html.TextBoxFor(
@@ -46,9 +61,16 @@
                 @class = "form-control",
                 type = "date"
             })
+
+        @Html.ValidationMessageFor(
+            m => m.ScheduledDate,
+            "",
+            new { @class = "text-danger" })
+
     </div>
 
     <div class="form-group mb-3">
+
         <label>Time Slot</label>
 
         @Html.DropDownListFor(
@@ -57,32 +79,42 @@
             {
                 new SelectListItem
                 {
-                    Text="09:00 AM",
-                    Value="09:00 AM"
+                    Text = "09:00 AM",
+                    Value = "09:00 AM"
                 },
+
                 new SelectListItem
                 {
-                    Text="10:00 AM",
-                    Value="10:00 AM"
+                    Text = "10:00 AM",
+                    Value = "10:00 AM"
                 },
+
                 new SelectListItem
                 {
-                    Text="11:00 AM",
-                    Value="11:00 AM"
+                    Text = "11:00 AM",
+                    Value = "11:00 AM"
                 },
+
                 new SelectListItem
                 {
-                    Text="02:00 PM",
-                    Value="02:00 PM"
+                    Text = "02:00 PM",
+                    Value = "02:00 PM"
                 },
+
                 new SelectListItem
                 {
-                    Text="03:00 PM",
-                    Value="03:00 PM"
+                    Text = "03:00 PM",
+                    Value = "03:00 PM"
                 }
             },
             "-- Select Slot --",
             new { @class = "form-control" })
+
+        @Html.ValidationMessageFor(
+            m => m.TimeSlot,
+            "",
+            new { @class = "text-danger" })
+
     </div>
 
     <button type="submit"

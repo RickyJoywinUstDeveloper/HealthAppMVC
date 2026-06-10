@@ -1,15 +1,16 @@
-﻿@using HealthAppMVC.Models
-@model IEnumerable<HealthAppMVC.Models.Appointment>
-
+﻿@model IEnumerable<SharedDto.AppointmentDtos.AppointmentDto>
 
 @{
+    ViewBag.Title = "Upcoming Appointments";
+
     var appointmentsWithRecords =
         ViewBag.AppointmentsWithRecords
         as List<int>;
 }
 
-
-<h2 class="mb-4">📅 Upcoming Appointments</h2>
+<h2 class="mb-4">
+    📅 Upcoming Appointments
+</h2>
 
 @if (TempData["Success"] != null)
 {
@@ -18,7 +19,10 @@
     </div>
 }
 
-@using (Html.BeginForm("UpcomingAppointments", "Appointment", FormMethod.Get))
+@using (Html.BeginForm(
+            "UpcomingAppointments",
+            "Appointment",
+            FormMethod.Get))
 {
     <div class="row mb-4">
 
@@ -42,10 +46,16 @@
         </div>
 
         <div class="col-md-2">
-            <a href="@Url.Action("DoctorServices", "Home")"
+
+            <a href="@Url.Action(
+                        "DoctorServices",
+                        "Home")"
                class="btn btn-secondary">
+
                 Back
+
             </a>
+
         </div>
 
     </div>
@@ -61,50 +71,106 @@
 
                 <div class="card-body">
 
-                    <h5>👨‍⚕️ @item.DoctorName</h5>
-                    <p>👤 Patient: @item.PatientName</p>
-
-                    <p>📅 @item.ScheduledDate.ToString("dd-MMM-yyyy")</p>
-                    <p>⏰ @item.TimeSlot</p>
+                    <h5>
+                        👨‍⚕️ @item.DoctorName
+                    </h5>
 
                     <p>
-                        Status:
-                        @if (item.Status == AppointmentStatus.Pending)
-                        {
-                            <span class="badge bg-warning">Pending</span>
-                        }
-                        else if (item.Status == AppointmentStatus.Confirmed)
-                        {
-                            <span class="badge bg-success">Confirmed</span>
-                        }
+                        👤 Patient:
+                        @item.PatientName
                     </p>
 
-                    @if (item.Status == AppointmentStatus.Pending)
+                    <p>
+                        📅
+                        @item.ScheduledDate
+                        .ToString("dd-MMM-yyyy")
+                    </p>
+
+                    <p>
+                        ⏰
+                        @item.TimeSlot
+                    </p>
+
+                    <p>
+
+                        Status:
+
+                        @if (item.Status == "Pending")
+                        {
+                            <span class="badge bg-warning">
+                                Pending
+                            </span>
+                        }
+                        else if (item.Status == "Confirmed")
+                        {
+                            <span class="badge bg-success">
+                                Confirmed
+                            </span>
+                        }
+                        else if (item.Status == "Cancelled")
+                        {
+                            <span class="badge bg-danger">
+                                Cancelled
+                            </span>
+                        }
+                        else if (item.Status == "Completed")
+                        {
+                            <span class="badge bg-info">
+                                Completed
+                            </span>
+                        }
+
+                    </p>
+
+                    @if (item.Status == "Pending")
                     {
-                        <a href="@Url.Action("Confirm", "Appointment", new { id = item.AppointmentId })"
+                        <a href="@Url.Action(
+                                    "Confirm",
+                                    "Appointment",
+                                    new
+                                    {
+                                        id =
+                                        item.AppointmentId
+                                    })"
                            class="btn btn-success btn-sm">
+
                             Confirm
+
                         </a>
 
-                        <a href="@Url.Action("Cancel", "Appointment", new { id = item.AppointmentId })"
+                        <a href="@Url.Action(
+                                    "Cancel",
+                                    "Appointment",
+                                    new
+                                    {
+                                        id =
+                                        item.AppointmentId
+                                    })"
                            class="btn btn-danger btn-sm">
+
                             Cancel
+
                         </a>
                     }
 
-                    @if (item.Status == AppointmentStatus.Confirmed
-&& !appointmentsWithRecords.Contains(item.AppointmentId))
+                    @if (item.Status == "Confirmed"
+                        && appointmentsWithRecords != null
+                        && !appointmentsWithRecords
+                            .Contains(
+                                item.AppointmentId))
                     {
                         <a href="@Url.Action(
-            "Create",
-            "HealthRecord",
-            new
-            {
-                appointmentId =
-                    item.AppointmentId
-            })"
-                           class="btn btn-success">
+                                    "Create",
+                                    "HealthRecord",
+                                    new
+                                    {
+                                        appointmentId =
+                                        item.AppointmentId
+                                    })"
+                           class="btn btn-success mt-2">
+
                             Add Health Record
+
                         </a>
                     }
 
@@ -117,26 +183,50 @@
 
 </div>
 
-<script>
-    $(document).ready(function () {
+@section Scripts{
 
-        $("#doctorName").autocomplete({
-            source: function (request, response) {
-                $.ajax({
-                    url: '/Doctor/SearchDoctorNames',
-                    type: 'GET',
-                    data: { term: request.term },
-                    success: function (data) {
-                        response(data);
-                    }
-                });
-            },
-            select: function (event, ui) {
-                $("#doctorId").val(ui.item.value);
-                $("#doctorName").val(ui.item.label);
-                return false;
-            }
+    <script>
+
+        $(document).ready(function () {
+
+            $("#doctorName").autocomplete({
+
+                source: function (
+                    request,
+                    response) {
+
+                    $.ajax({
+
+                        url:
+                            '/Doctor/SearchDoctorNames',
+
+                        type: 'GET',
+
+                        data: {
+                            term:
+                                request.term
+                        },
+
+                        success: function (data) {
+
+                            response(data);
+                        }
+                    });
+                },
+
+                select: function (
+                    event,
+                    ui) {
+
+                    $("#doctorName")
+                        .val(ui.item.label);
+
+                    return false;
+                }
+            });
+
         });
 
-    });
-</script>
+    </script>
+
+}

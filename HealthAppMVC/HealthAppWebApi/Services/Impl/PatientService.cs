@@ -1,39 +1,49 @@
-﻿using HealthAppWebApi.DTOs;
-using HealthAppWebApi.Models;
+﻿using HealthAppWebApi.Models;
 using HealthAppWebApi.Repositories.Interface;
 using HealthAppWebApi.Services.Interface;
+using SharedDto.PatientDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Services.Impl
 {
-    public class PatientService : IPatientService
+    public class PatientService
+        : IPatientService
     {
-        private readonly IPatientRepository _repo;
+        private readonly
+            IPatientRepository _repo;
 
-        public PatientService(IPatientRepository repo)
+        public PatientService(
+            IPatientRepository repo)
         {
             _repo = repo;
         }
 
-        public List<PatientDto> GetAllPatients()
+        public async Task<List<PatientDto>>
+            GetAllPatientsAsync()
         {
-            return _repo.GetAll()
-                .Select(p => new PatientDto
+            var patients =
+                await _repo.GetAllAsync();
+
+            return patients.Select(p =>
+                new PatientDto
                 {
                     PatientId = p.PatientId,
                     FullName = p.FullName,
                     Gender = p.Gender.ToString(),
-                    Email = p.Email
-                })
-                .ToList();
+                    Email = p.Email,
+                    PhoneNumber = p.PhoneNumber,
+                    InsuranceId = p.InsuranceId
+                }).ToList();
         }
 
-        public PatientDto GetPatientById(int id)
+        public async Task<PatientDto>
+            GetPatientByIdAsync(int id)
         {
-            var patient = _repo.GetById(id);
+            var patient =
+                await _repo.GetByIdAsync(id);
 
             if (patient == null)
                 return null;
@@ -43,48 +53,116 @@ namespace HealthAppWebApi.Services.Impl
                 PatientId = patient.PatientId,
                 FullName = patient.FullName,
                 Gender = patient.Gender.ToString(),
-                Email = patient.Email
+                Email = patient.Email,
+                PhoneNumber = patient.PhoneNumber,
+                InsuranceId = patient.InsuranceId
             };
         }
 
-        public void RegisterPatient(CreatePatientDto dto)
+        public async Task RegisterPatientAsync(
+            CreatePatientDto dto)
         {
-            if (dto.DateOfBirth > DateTime.Today)
-                throw new Exception("Future date is not allowed.");
-
-            Patient patient = new Patient
+            if (await _repo
+                .EmailExistsAsync(dto.Email))
             {
-                FullName = dto.FullName,
-                DateOfBirth = dto.DateOfBirth,
-                Gender = (GenderType)Enum.Parse(
-                    typeof(GenderType),
-                    dto.Gender,true),
-                Email = dto.Email,
-                PhoneNumber = dto.PhoneNumber,
-                CreatedDate = DateTime.Now
-            };
+                throw new Exception(
+                    "Email already exists.");
+            }
 
-            _repo.Add(patient);
+            if (dto.DateOfBirth >
+                DateTime.Today)
+            {
+                throw new Exception(
+                    "Future date not allowed.");
+            }
+
+            Patient patient =
+                new Patient
+                {
+                    FullName = dto.FullName,
+                    DateOfBirth = dto.DateOfBirth,
+                    Gender =
+                        (GenderType)Enum.Parse(
+                            typeof(GenderType),
+                            dto.Gender,
+                            true),
+
+                    Email = dto.Email,
+
+                    PhoneNumber =
+                        dto.PhoneNumber,
+
+                    InsuranceId =
+                        dto.InsuranceId,
+
+                    CreatedDate =
+                        DateTime.UtcNow
+                };
+
+            await _repo.AddAsync(patient);
         }
 
-        public void UpdatePatient(int id, CreatePatientDto dto)
+        public async Task UpdatePatientAsync(
+            int id,
+            CreatePatientDto dto)
         {
-            var patient = _repo.GetById(id);
+            Patient patient =
+                await _repo.GetByIdAsync(id);
 
             if (patient == null)
-                throw new Exception("Patient not found.");
+            {
+                throw new Exception(
+                    "Patient not found.");
+            }
 
-            patient.FullName = dto.FullName;
-            patient.DateOfBirth = dto.DateOfBirth;
-            patient.Email = dto.Email;
-            patient.PhoneNumber = dto.PhoneNumber;
+            patient.FullName =
+                dto.FullName;
+
+            patient.DateOfBirth =
+                dto.DateOfBirth;
+
+            patient.Email =
+                dto.Email;
+
+            patient.PhoneNumber =
+                dto.PhoneNumber;
+
+            patient.InsuranceId =
+                dto.InsuranceId;
 
             patient.Gender =
                 (GenderType)Enum.Parse(
                     typeof(GenderType),
-                    dto.Gender,true);
+                    dto.Gender,
+                    true);
 
-            _repo.Update(patient);
+            await _repo.UpdateAsync(patient);
+        }
+
+        public async Task<List<PatientDto>>
+            SearchByNameAsync(string name)
+        {
+            var patients =
+                await _repo
+                .SearchByNameAsync(name);
+
+            return patients.Select(p =>
+                new PatientDto
+                {
+                    PatientId = p.PatientId,
+                    FullName = p.FullName,
+                    Email = p.Email,
+                    Gender = p.Gender.ToString()
+                }).ToList();
+        }
+
+        public async Task<int>
+            GetAppointmentCountAsync(
+                int patientId)
+        {
+            return await _repo
+                .GetAppointmentCountAsync(
+                    patientId);
         }
     }
 }

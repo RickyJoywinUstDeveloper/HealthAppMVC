@@ -1,8 +1,11 @@
-﻿@model IEnumerable<HealthAppMVC.Models.Patient>
+﻿@model IEnumerable<SharedDto.PatientDtos.PatientDto>
 
 @{
     ViewBag.Title = "View Patient Details";
 }
+
+<link rel="stylesheet"
+      href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
 <div class="card shadow">
 
@@ -25,7 +28,9 @@
 
             <div class="col-md-4">
 
-                <a href="@Url.Action("PatientServices","Home")"
+                <a href="@Url.Action(
+                            "PatientServices",
+                            "Home")"
                    class="btn btn-secondary">
                     Back
                 </a>
@@ -57,7 +62,8 @@
 
                             <p>
                                 <strong>Date Of Birth:</strong>
-                                @patient.DateOfBirth.ToString("dd-MMM-yyyy")
+                                @patient.DateOfBirth
+                                .ToString("dd-MMM-yyyy")
                             </p>
 
                             <p>
@@ -82,7 +88,8 @@
 
                             <p>
                                 <strong>Created:</strong>
-                                @patient.CreatedDate.ToString("dd-MMM-yyyy")
+                                @patient.CreatedDate
+                                .ToString("dd-MMM-yyyy")
                             </p>
 
                         </div>
@@ -95,7 +102,9 @@
             <div id="noResults"
                  class="alert alert-warning"
                  style="display:none;">
+
                 No patients found.
+
             </div>
         }
         else
@@ -115,57 +124,63 @@
 
     <script>
 
-    $(function () {
+        $(function () {
 
-        $("#patientSearch").autocomplete({
+            $("#patientSearch").autocomplete({
 
-            source: '@Url.Action("SearchPatientNames","Patient")'
-
-        });
-
-        $("#patientSearch").on("input", function () {
-
-            var searchText =
-                $(this).val().toLowerCase();
-
-            var visibleCount = 0;
-
-            $(".patient-card-wrapper").each(function () {
-
-                var patientName =
-                    $(this)
-                    .find(".patient-name")
-                    .text()
-                    .toLowerCase();
-
-                if (patientName.indexOf(searchText) > -1) {
-
-                    $(this).show();
-                    visibleCount++;
-
-                }
-                else {
-
-                    $(this).hide();
-
-                }
+                source:
+                    '@Url.Action(
+                        "SearchPatientNames",
+                        "Patient")'
 
             });
 
-            if (visibleCount === 0) {
+            $("#patientSearch").on(
+                "input",
+                function () {
 
-                $("#noResults").show();
+                    var searchText =
+                        $(this)
+                            .val()
+                            .toLowerCase();
 
-            }
-            else {
+                    var visibleCount = 0;
 
-                $("#noResults").hide();
+                    $(".patient-card-wrapper")
+                        .each(function () {
 
-            }
+                            var patientName =
+                                $(this)
+                                    .find(".patient-name")
+                                    .text()
+                                    .toLowerCase();
+
+                            if (patientName
+                                .indexOf(searchText) > -1)
+                            {
+                                $(this).show();
+
+                                visibleCount++;
+                            }
+                            else
+                            {
+                                $(this).hide();
+                            }
+
+                        });
+
+                    if (visibleCount === 0)
+                    {
+                        $("#noResults").show();
+                    }
+                    else
+                    {
+                        $("#noResults").hide();
+                    }
+
+                });
 
         });
-
-    });
 
     </script>
 

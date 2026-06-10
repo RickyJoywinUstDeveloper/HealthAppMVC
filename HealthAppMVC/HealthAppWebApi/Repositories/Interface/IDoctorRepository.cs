@@ -1,25 +1,28 @@
 ﻿using HealthAppWebApi.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Repositories.Interface
 {
     public interface IDoctorRepository
     {
-        List<Doctor> GetAll();
+        Task<List<Doctor>> GetAllAsync();
 
-        Doctor GetById(int id);
+        Task<Doctor> GetByIdAsync(int id);
 
-        void Add(Doctor doctor);
+        Task AddAsync(Doctor doctor);
 
-        void Update(Doctor doctor);
+        Task UpdateAsync(Doctor doctor);
 
-        void ChangeStatus(int id, bool isActive);
+        Task ChangeStatusAsync(
+            int id,
+            bool isActive);
 
-        List<Doctor> GetBySpecialisation(
-    SpecialisationType specialisation);
+        Task<List<Doctor>>
+            GetBySpecialisationAsync(
+                SpecialisationType specialisation);
+
+        Task<List<Doctor>>
+            SearchByNameAsync(string name);
     }
 }

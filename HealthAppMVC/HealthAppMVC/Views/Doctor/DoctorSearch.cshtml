@@ -1,5 +1,4 @@
-﻿@model IEnumerable<HealthAppMVC.Models.Doctor>
-@using HealthAppMVC.Models
+﻿@model IEnumerable<SharedDto.DoctorDtos.DoctorDto>
 
 @{
     ViewBag.Title = "Doctor Search";
@@ -7,9 +6,10 @@
 
 <h2 class="mb-4">View Doctor Details</h2>
 
-@using (Html.BeginForm("DoctorSearch",
-                       "Doctor",
-                       FormMethod.Get))
+@using (Html.BeginForm(
+            "DoctorSearch",
+            "Doctor",
+            FormMethod.Get))
 {
     <div class="row mb-4">
 
@@ -26,9 +26,62 @@
 
             @Html.DropDownList(
                 "specialisation",
-                new SelectList(
-                    Enum.GetNames(
-                    typeof(SpecialisationType))),
+                new List<SelectListItem>
+                {
+                    new SelectListItem
+                    {
+                        Text = "Cardiologist",
+                        Value = "Cardiologist"
+                    },
+
+                    new SelectListItem
+                    {
+                        Text = "Dermatologist",
+                        Value = "Dermatologist"
+                    },
+
+                    new SelectListItem
+                    {
+                        Text = "Neurologist",
+                        Value = "Neurologist"
+                    },
+
+                    new SelectListItem
+                    {
+                        Text = "Orthopedic",
+                        Value = "Orthopedic"
+                    },
+
+                    new SelectListItem
+                    {
+                        Text = "Pediatrician",
+                        Value = "Pediatrician"
+                    },
+
+                    new SelectListItem
+                    {
+                        Text = "General Physician",
+                        Value = "GeneralPhysician"
+                    },
+
+                    new SelectListItem
+                    {
+                        Text = "Psychiatrist",
+                        Value = "Psychiatrist"
+                    },
+
+                    new SelectListItem
+                    {
+                        Text = "ENT",
+                        Value = "ENT"
+                    },
+
+                    new SelectListItem
+                    {
+                        Text = "Gynecologist",
+                        Value = "Gynecologist"
+                    }
+                },
                 "-- Select Specialisation --",
                 new { @class = "form-control" })
 
@@ -43,10 +96,14 @@
         </div>
 
         <div class="col-md-2">
-            <a href="@Url.Action("DoctorServices","Home")"
+
+            <a href="@Url.Action(
+                        "DoctorServices",
+                        "Home")"
                class="btn btn-secondary">
                 Back
             </a>
+
         </div>
 
     </div>
@@ -91,6 +148,13 @@
                     <p>
                         <strong>Phone:</strong>
                         @doctor.DoctorPhoneNo
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+                        @(doctor.IsActive
+                            ? "Active"
+                            : "Inactive")
                     </p>
 
                 </div>

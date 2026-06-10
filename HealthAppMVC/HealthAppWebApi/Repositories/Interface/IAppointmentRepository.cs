@@ -1,42 +1,62 @@
 ﻿using HealthAppWebApi.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HealthAppWebApi.Repositories.Interface
 {
     public interface IAppointmentRepository
     {
-        List<Appointment> GetAll();
+        Task<List<Appointment>> GetAllAsync();
 
-        Appointment GetById(int id);
+        Task<Appointment> GetByIdAsync(int id);
 
-        void Add(Appointment appointment);
+        Task AddAsync(Appointment appointment);
 
-        void Update(Appointment appointment);
+        Task UpdateAsync(Appointment appointment);
 
-        bool IsDoctorSlotBooked(
+        Task<bool> IsDoctorSlotBookedAsync(
             int doctorId,
-            System.DateTime date,
+            DateTime date,
             string slot);
 
-        bool HasPatientSlotConflict(
+        Task<bool> HasPatientSlotConflictAsync(
             int patientId,
-            System.DateTime date,
+            DateTime date,
             string slot);
 
-        bool HasAppointmentWithDoctorOnSameDay(
-    int patientId,
-    int doctorId,
-    DateTime date);
+        Task<bool>
+            HasAppointmentWithDoctorOnSameDayAsync(
+                int patientId,
+                int doctorId,
+                DateTime date);
 
-        List<Appointment> GetUpcomingConfirmedAppointmentsByDoctor(
-    int doctorId);
+        Task<List<Appointment>>
+            GetUpcomingConfirmedAppointmentsByDoctorAsync(
+                int doctorId);
 
-        List<Appointment>
-    GetAppointmentsByPatient(
-        int patientId);
+        Task<List<Appointment>>
+            GetAppointmentsByPatientAsync(
+                int patientId);
+
+        Task<bool>
+            HealthRecordExistsAsync(
+                int appointmentId);
+
+        Task<List<Appointment>>
+            GetUpcomingAppointmentsAsync();
+
+        Task<List<Appointment>>
+            GetUpcomingAppointmentsByDoctorAsync(
+                string doctorName);
+
+        Task<List<string>>
+            GetAvailableSlotsAsync(
+                int doctorId,
+                DateTime scheduledDate);
+
+        Task<List<Appointment>>
+            GetAppointmentsByPatientNameAsync(
+                string patientName);
     }
 }

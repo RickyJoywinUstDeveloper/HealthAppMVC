@@ -1,4 +1,4 @@
-﻿@model HealthAppMVC.Models.HealthRecord
+﻿@model SharedDto.HealthRecordDtos.HealthRecordDto
 
 @{
     ViewBag.Title = "Health Record Details";
@@ -7,6 +7,7 @@
 <h2>Health Record Details</h2>
 
 <div class="card">
+
     <div class="card-body">
 
         <dl class="row">
@@ -28,19 +29,11 @@
             </dd>
 
             <dt class="col-md-3">
-                Specialisation
-            </dt>
-
-            <dd class="col-md-9">
-                @Model.Specialisation
-            </dd>
-
-            <dt class="col-md-3">
                 Visit Date
             </dt>
 
             <dd class="col-md-9">
-                @Model.VisitDate
+                @Model.VisitDate.ToString("dd-MM-yyyy")
             </dd>
 
             <dt class="col-md-3">
@@ -71,14 +64,13 @@
 
         @Html.ActionLink(
             "Back",
-            "History",
-            new
-            {
-                patientId = Model.PatientId
-            },
+            "SearchPatientHistory",
+            null,
             new
             {
                 @class = "btn btn-secondary"
             })
+
     </div>
+
 </div>

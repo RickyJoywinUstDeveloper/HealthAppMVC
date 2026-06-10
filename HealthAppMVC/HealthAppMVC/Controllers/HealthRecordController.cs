@@ -1,8 +1,9 @@
-﻿using HealthAppMVC.Models;
-using HealthAppMVC.Services.Interface;
+﻿using HealthAppMVC.Services.Interface;
+using SharedDto.HealthRecordDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace HealthAppMVC.Controllers
@@ -10,13 +11,17 @@ namespace HealthAppMVC.Controllers
     public class HealthRecordController
         : Controller
     {
-        private readonly IHealthRecordService
+        private readonly
+            IHealthRecordApiService
             _healthRecordService;
-        private readonly IPatientService _patientService;
+
+        private readonly
+            IPatientApiService
+            _patientService;
 
         public HealthRecordController(
-    IHealthRecordService healthRecordService,
-    IPatientService patientService)
+            IHealthRecordApiService healthRecordService,
+            IPatientApiService patientService)
         {
             _healthRecordService =
                 healthRecordService;
@@ -27,45 +32,43 @@ namespace HealthAppMVC.Controllers
 
         // GET:
         // HealthRecord/Create?appointmentId=1
+        [HttpGet]
         public ActionResult Create(
             int appointmentId)
         {
-            HealthRecord model =
-                new HealthRecord
+            CreateHealthRecordDto dto =
+                new CreateHealthRecordDto
                 {
                     AppointmentId =
                         appointmentId
                 };
 
-            return View(model);
+            return View(dto);
         }
 
+        // POST:
+        // HealthRecord/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(
-            HealthRecord record)
+        public async Task<ActionResult>
+            Create(
+                CreateHealthRecordDto dto)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View(record);
+                    return View(dto);
                 }
 
-                record = _healthRecordService
-                     .AddHealthRecord(
-                         record);
+                await _healthRecordService
+                    .AddAsync(dto);
 
                 TempData["Success"] =
                     "Health Record Added Successfully";
 
                 return RedirectToAction(
-                    "History",
-                    new
-                    {
-                        patientId =
-                        record.PatientId
-                    });
+                    "SearchPatientHistory");
             }
             catch (Exception ex)
             {
@@ -73,19 +76,18 @@ namespace HealthAppMVC.Controllers
                     "",
                     ex.Message);
 
-                return View(record);
+                return View(dto);
             }
         }
 
-        
-
+        // GET:
         // HealthRecord/Details/1
-        public ActionResult Details(
-            int id)
+        public async Task<ActionResult>
+            Details(int id)
         {
             var record =
-                _healthRecordService
-                .GetRecordById(id);
+                await _healthRecordService
+                    .GetByIdAsync(id);
 
             if (record == null)
             {
@@ -95,26 +97,38 @@ namespace HealthAppMVC.Controllers
             return View(record);
         }
 
-        public ActionResult SearchPatientHistory(int? patientId)
+        // GET:
+        // HealthRecord/SearchPatientHistory
+        public async Task<ActionResult>
+            SearchPatientHistory(
+                int? patientId)
         {
-            IEnumerable<HealthRecord> records =
-                Enumerable.Empty<HealthRecord>();
+            IEnumerable<HealthRecordDto>
+                records =
+                    Enumerable.Empty
+                        <HealthRecordDto>();
 
             if (patientId.HasValue)
             {
-                records = _healthRecordService
-                    .GetPatientHistory(patientId.Value);
+                records =
+                    await _healthRecordService
+                        .GetPatientHistoryAsync(
+                            patientId.Value);
             }
 
             return View(records);
         }
 
-        public JsonResult SearchPatientNames(
-    string term)
+        public async Task<JsonResult>
+            SearchPatientNames(
+                string term)
         {
             var patients =
-                _patientService
-                .SearchByName(term)
+                await _patientService
+                    .SearchByNameAsync(term);
+
+            var result =
+                patients
                 .Select(p => new
                 {
                     label = p.FullName,
@@ -123,10 +137,8 @@ namespace HealthAppMVC.Controllers
                 .ToList();
 
             return Json(
-                patients,
+                result,
                 JsonRequestBehavior.AllowGet);
         }
-
-        
     }
 }
